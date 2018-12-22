@@ -1,0 +1,8 @@
+Pox=19.55;Poy=16.01;Width=21.8;Height=21.6;ComponentType=Junction;RoadOrientation=None;
+Pox=130.75;Poy=16.61;Width=21.4;Height=20.4;ComponentType=Junction;RoadOrientation=None;
+Pox=129.15;Poy=117.01;Width=21.6;Height=20;ComponentType=Junction;RoadOrientation=None;
+Pox=19.15;Poy=118.01;Width=22;Height=19.8;ComponentType=Junction;RoadOrientation=None;
+Pox=36.95;Poy=19.21;Width=95.4;Height=14.6;ComponentType=RoadSegment;RoadOrientation=Horizontal;
+Pox=132.15;Poy=33.81;Width=14.6;Height=87.2;ComponentType=RoadSegment;RoadOrientation=Vertical;
+Pox=36.15;Poy=120.61;Width=96;Height=14.6;ComponentType=RoadSegment;RoadOrientation=Horizontal;
+Pox=22.35;Poy=33.61;Width=14.6;Height=85.8;ComponentType=RoadSegment;RoadOrientation=Vertical;

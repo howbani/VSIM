@@ -1,0 +1,3 @@
+Pox=6.74999999999999;Poy=7.00999999999998;Width=13.6;Height=13.6;ComponentType=Junction;RoadOrientation=None;
+Pox=372.903398058252;Poy=8.30126213592232;Width=13.6;Height=13.6;ComponentType=Junction;RoadOrientation=None;
+Pox=20.15;Poy=9.60999999999999;Width=353.454368932039;Height=8.5;ComponentType=RoadSegment;RoadOrientation=Horizontal;
