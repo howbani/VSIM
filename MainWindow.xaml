@@ -1,0 +1,129 @@
+﻿<Window x:Class="VANET_SIM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VANET_SIM"
+        mc:Ignorable="d"
+        Loaded="Window_Loaded"
+        Closing="Window_Closing"
+        WindowState="Maximized"
+        Background="Transparent"
+        WindowStartupLocation="CenterScreen"
+        Title="Hero" Height="350" Width="525">
+
+    <Border>
+        <StackPanel>
+            <DockPanel IsEnabled="True" Name="top_menu">
+                <Menu DockPanel.Dock="Top">
+                    <MenuItem  Header="Road Network">
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Add Junction" />
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Add Road Segment" />
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Import Vanet" />
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Export Vanet" />
+
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Clear" />
+                    </MenuItem>
+
+                    <MenuItem  Header="Vehicles">
+                        <MenuItem Header="Vehicles's Number">
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="Unlimited"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="1"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="5"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="10"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="20"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="30"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="50"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="80"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="100"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="150"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="200"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="250"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="300"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="350"/>
+                            <MenuItem Click="btn_set_number_of_vechiles" Header="400"/>
+                        </MenuItem>
+                        
+                        <MenuItem  Header="Display Info">
+                            <MenuItem Name="op_none" Click="btn_show_v_info"  Header="None" />
+                            <MenuItem Name="op_VID" Click="btn_show_v_info"  Header="VID" />
+                            <MenuItem Name="op_SpeedKMH" Click="btn_show_v_info"  Header="Speed KMH" />
+                            <MenuItem Name="op_SpeedTimer" Click="btn_show_v_info"  Header="Speed Timer" />
+                            <MenuItem Name="op_RID" Click="btn_show_v_info"  Header="Road Sgment ID" />
+                            <MenuItem Name="op_SJID" Click="btn_show_v_info"  Header="Start Junction" />
+                            <MenuItem Name="op_DJID" Click="btn_show_v_info"  Header="End Junction" />
+                            <MenuItem Name="op_LaneIndex" Click="btn_show_v_info"  Header="Lane Index" />
+                            <MenuItem Name="op_InstanceLocation" Click="btn_show_v_info"  Header="Instance Location" />
+                            <MenuItem Name="op_RemianDistanceToHeadingJunction" Click="btn_show_v_info"  Header="Remain Distance To Heading Junction" />
+                            <MenuItem Name="op_TravelledDistanceInMeter" Click="btn_show_v_info"  Header="Travelled Distance In Segment" />
+                            <MenuItem Name="op_ExceededDistanceInMeter" Click="btn_show_v_info"  Header="Exceeded Distance" />
+                            <MenuItem Name="op_PacketsQueueLength" Click="btn_show_v_info"  Header="Packets Queue Length" />
+                            <MenuItem Name="op_JunctionQueueIndex" Click="btn_show_v_info"  Header="Junction Queue Index" />
+                            <MenuItem Name="op_RIDpluseLaneIndex" Click="btn_show_v_info"  Header="RID and Lane Index" />
+                            <MenuItem Name="op_SwitchDirection" Click="btn_show_v_info"  Header="Switch to Direction" />
+                            <MenuItem Name="op_Direction" Click="btn_show_v_info"  Header="Direction" />
+                        </MenuItem>
+                        
+                    </MenuItem>
+
+                    <MenuItem  Header="Packets">
+                        <MenuItem  Header="Packets Rate">
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/0" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/1ms" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="pck/0.5s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/1s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/3s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/5s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/10s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/15s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/20s" />
+                            <MenuItem Click="btn_change_packet_rate"  Header="1pck/30s" />
+                        </MenuItem>
+
+                        <MenuItem  Header="Number of Packets">
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="1" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="3" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="10" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="100" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="300" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="500" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="1000" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="1500" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="2000" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="3000" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="5000" />
+                            <MenuItem Click="btn_generate_x_of_packets"  Header="10000" />
+                        </MenuItem>
+
+
+
+                    </MenuItem>
+
+                    <MenuItem  Header="Resultes">
+                        <MenuItem Click="btn_show_results"  Header="_Show Packets" />
+                    </MenuItem>
+                    
+                </Menu>
+            </DockPanel>
+
+            <TabControl Width="AUTO" Height="AUTO">
+                <TabItem Width="AUTO" Height="AUTO">
+                    <TabItem.Header>
+                        <StackPanel Height="20" Orientation="Horizontal">
+                            <TextBlock Name="tab_vanet">Vanet</TextBlock>
+                            <Label Width="50"></Label>
+                            <Slider  Value="{Binding ElementName=canvas_vanet, Path=LayoutTransform.ScaleX, Mode=OneWay}" Name="_slider" Maximum="10"  Width="200" ValueChanged="Slider_ValueChanged"></Slider>
+                            <TextBlock Name="lbl_zome_percentage">100%</TextBlock>
+                        </StackPanel>
+                    </TabItem.Header>
+                    <ScrollViewer Name="vanet_scroller" Margin="0,1,0,0" CanContentScroll="True" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" PanningMode="HorizontalOnly" DataContext="{Binding}">
+                        <Canvas  Background="Transparent"  Name="canvas_vanet" Height="500"></Canvas>
+                    </ScrollViewer>
+                </TabItem>
+                
+            </TabControl>
+            
+        </StackPanel>
+    </Border>
+    
+</Window>

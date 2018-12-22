@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VANET_SIM", "VANET_SIM.csproj", "{22D6BC10-B10B-4EE4-A76E-DD9A44FE7D4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZOMO", "..\ZomoSim\ZOMO.csproj", "{A1A8191E-98B0-4131-9E44-C97DC7E2E9FC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{22D6BC10-B10B-4EE4-A76E-DD9A44FE7D4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22D6BC10-B10B-4EE4-A76E-DD9A44FE7D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22D6BC10-B10B-4EE4-A76E-DD9A44FE7D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22D6BC10-B10B-4EE4-A76E-DD9A44FE7D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1A8191E-98B0-4131-9E44-C97DC7E2E9FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1A8191E-98B0-4131-9E44-C97DC7E2E9FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1A8191E-98B0-4131-9E44-C97DC7E2E9FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1A8191E-98B0-4131-9E44-C97DC7E2E9FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42939AE9-78AC-4305-818D-FB7AB0CA55E9}
+	EndGlobalSection
+EndGlobal
