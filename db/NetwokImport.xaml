@@ -1,0 +1,15 @@
+﻿<UserControl x:Class="VANET_SIM.db.NetwokImport"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="33" d:DesignWidth="300">
+
+    <StackPanel  Background="LightBlue" Margin="1" Height="30" Orientation="Horizontal">
+        <Label Margin="1" Name="lbl_id">ID</Label>
+        <Label Margin="1" Name="lbl_network_name">Netwok Name</Label>
+        <Button Click="brn_import_Click" Name="brn_import" Margin="1" Height="22">Import</Button>
+    </StackPanel>
+    
+</UserControl>

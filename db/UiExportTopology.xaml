@@ -1,0 +1,14 @@
+﻿<Window x:Class="VANET_SIM.db.UiExportTopology"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Export Vanet" Height="150" Width="300">
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal">
+            <Label Width="100">Netwok Name:</Label>
+            <TextBox Text="" Name="txt_networkName" Width="162"></TextBox>
+        </StackPanel>
+        
+
+        <Button Click="Button_Click" Margin="0,0,183,0">OK</Button>
+    </StackPanel>
+</Window>

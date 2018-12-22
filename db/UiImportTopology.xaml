@@ -1,0 +1,14 @@
+﻿<Window x:Class="VANET_SIM.db.UiImportTopology"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Topologies List" 
+        WindowStartupLocation="CenterScreen"
+        Height="500" Width="300">
+
+
+    <ScrollViewer Margin="0,1,0,0" CanContentScroll="True" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" PanningMode="HorizontalOnly" DataContext="{Binding}">
+        <StackPanel  ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Visible" Orientation="Vertical" Name="stk_netwoks"></StackPanel>
+    </ScrollViewer>
+
+  
+</Window>
