@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="VANET_SIM.RoadNet.Components.Junction"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VANET_SIM.RoadNet.Components"
+             mc:Ignorable="d" 
+             Loaded="UserControl_Loaded"
+             MouseDown="Canvas_MouseDown"
+             MouseMove="Canvas_MouseMove"
+             MouseUp="Canvas_MouseUp"
+             MouseEnter="Canvas_MouseEnter"
+             MouseLeave="Canvas_MouseLeave"
+             MouseDoubleClick="UserControl_MouseDoubleClick"
+              d:DesignHeight="20" d:DesignWidth="20">
+
+
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <Label MouseDown="btn_copy_Click" Name="btn_copy">Copy</Label>
+            <Label MouseDown="btn_delete_Click" Name="btn_delete">Delete</Label>
+        </ContextMenu>
+    </UserControl.ContextMenu>
+
+    <Grid
+        Name="_junction"
+        Background="Gray"
+        Width="auto" Height="auto">
+        <Grid Width="11px"  Height="11px" Name="_trafic_sign">
+            <TextBlock Name="lbl_ver_north" Foreground="Green" FontSize="5px" HorizontalAlignment="Center" VerticalAlignment="Top" Text="⭡" DockPanel.Dock="Top" />
+            <TextBlock Name="lbl_ver_south" Foreground="Green" FontSize="5px" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="⭣" DockPanel.Dock="Bottom" />
+            <TextBlock Name="lbl_hor_east"  Foreground="Red" FontSize="5px" HorizontalAlignment="Right" VerticalAlignment="Center" Text="⭢" DockPanel.Dock="Right" />
+            <TextBlock Name="lbl_hor_west"  Foreground="Red" FontSize="5" HorizontalAlignment="Left" VerticalAlignment="Center" Text="⭠" DockPanel.Dock="Left" />
+        </Grid>
+        <TextBlock Margin="0.4,2.3,0,0" Foreground="White" FontSize="4" FontWeight="ExtraLight" HorizontalAlignment="Center" VerticalAlignment="Center" Text="2"  Name="lbl_junction_id"/>
+    </Grid>
+    
+    
+    
+</UserControl>

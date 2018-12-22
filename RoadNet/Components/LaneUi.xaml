@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="VANET_SIM.RoadNet.Components.LaneUi"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VANET_SIM.RoadNet.Components"
+             
+             
+             mc:Ignorable="d" 
+             Background="Gray"
+             d:DesignHeight="300" d:DesignWidth="10">
+    
+    <Border Name="Lane" Width="10"  BorderThickness="0,0,0.5,0">
+        <Border.BorderBrush>
+            <VisualBrush>
+                <VisualBrush.Visual>
+                    <Rectangle StrokeDashArray="4" Stroke="White" StrokeThickness="1"
+                  Width="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualWidth}"
+                  Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Border}}, Path=ActualHeight}"/>
+                </VisualBrush.Visual>
+            </VisualBrush>
+        </Border.BorderBrush>
+        <Grid Background="Transparent"  Name="stack_lane">
+            <TextBlock FontSize="4"  Name="lbl_direction_symbol1" Foreground="Yellow" HorizontalAlignment="Center" VerticalAlignment="Top" Text="↓" />
+            <TextBlock FontSize="4"  Name="lbl_direction_symbol2" Foreground="Yellow" HorizontalAlignment="Center" VerticalAlignment="Center" Text="↓" />
+            <TextBlock FontSize="4"  Name="lbl_direction_symbol3" Foreground="Yellow" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="↓" />
+
+            <TextBlock Margin="0,0,0,5" FontSize="2.5"  Name="lbl_info" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Bottom" Text="0" />
+
+
+            <Grid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Click="MenuItem_Click" Header="Set As Entry"/>
+                    <MenuItem Header="Copy" Click="MenuItem_Click"/>
+                    <MenuItem Header="Orientation">
+                        <MenuItem Click="MenuItem_Click"  Header="Horizontal"/>
+                        <MenuItem Click="MenuItem_Click"  Header="Vertical"/>
+                    </MenuItem>
+                    <MenuItem Header="Delete" Click="MenuItem_Click"/>
+                </ContextMenu>
+            </Grid.ContextMenu>
+            
+            
+        </Grid>
+    </Border>
+</UserControl>

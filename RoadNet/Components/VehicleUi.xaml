@@ -1,0 +1,18 @@
+﻿<UserControl x:Class="VANET_SIM.RoadNet.Components.VehicleUi"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VANET_SIM.RoadNet.Components"
+             mc:Ignorable="d" 
+             Loaded="UserControl_Loaded"
+             d:DesignHeight="5" d:DesignWidth="5">
+
+    <Grid  Name="grid_notation" Background="Transparent">
+        <TextBlock  MouseEnter="Txt_vehicle_MouseEnter" Visibility="Visible" Background="Transparent" FontSize="3"  Name="txt_vehicle" Foreground="Yellow" HorizontalAlignment="Center" VerticalAlignment="Center" Text="▼"  />
+        <TextBlock FontStyle="Normal" Visibility="Hidden" Background="Transparent" FontSize="2"  Name="txt_vid" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" Text="1" />
+        <Label VerticalAlignment="Center" HorizontalAlignment="Center"  FontStyle="Normal" Visibility="Visible" Background="Transparent" FontSize="2" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  Name="lbl_show_info" Foreground="Black"   Content="0.03765543" Height="26" Width="18" Margin="-6,-13,-7.2,-8.2"  />
+    </Grid>
+
+
+</UserControl>
