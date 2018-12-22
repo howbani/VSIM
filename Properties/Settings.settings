@@ -1,0 +1,27 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VANET_SIM.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="IsIntialized" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IsSetMaxVehicles" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="MaxNumberOfVehicles" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">120</Value>
+    </Setting>
+    <Setting Name="WeightConn" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.3</Value>
+    </Setting>
+    <Setting Name="WeightShortestDistance" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.7</Value>
+    </Setting>
+    <Setting Name="IntraRDirectionPar" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.1</Value>
+    </Setting>
+    <Setting Name="Ammar" Type="System.String" Scope="User">
+      <Value Profile="(Default)">"a"</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
