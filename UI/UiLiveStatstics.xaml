@@ -1,0 +1,83 @@
+﻿<Window x:Class="VANET_SIM.UI.UiLiveStatstics"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:VANET_SIM.UI"
+        mc:Ignorable="d"
+        Closed="Window_Closed"
+        MouseDoubleClick="Window_MouseDoubleClick"
+        WindowStyle="ToolWindow"
+        Title="Live Statistics" Height="500" Width="300">
+    <StackPanel Name="_mianStack">
+        <GroupBox BorderBrush="Gray" BorderThickness="1"  Foreground="OrangeRed" FontWeight="Bold" Header="Road Network">
+            <WrapPanel Orientation="Horizontal">
+                <Label FontWeight="Medium">Junctions</Label>
+                <Label Name="lbl_number_of_junctions" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Road Segments</Label>
+                <Label Name="lbl_number_of_road_segments" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Road-ways</Label>
+                <Label Name="lbl_raod_ways" Foreground="Red">2</Label>
+                <Label FontWeight="Medium">Lanes</Label>
+                <Label  Foreground="Red">3/way</Label>
+            </WrapPanel>
+        </GroupBox>
+
+        <GroupBox BorderBrush="Gray" BorderThickness="1" Foreground="OrangeRed" FontWeight="Bold" Header="Vehicles">
+            <WrapPanel Orientation="Horizontal">
+                <Label FontWeight="Medium">Number of Vehicles</Label>
+                <Label Name="lbl_number_of_vehicles" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Average Speed</Label>
+                <Label Name="lbl_average_speed" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Max Speed</Label>
+                <Label Name="lbl_max_speed" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Min Speed</Label>
+                <Label Name="lbl_min_speed" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Comm Range</Label>
+                <Label Name="lbl_com_range" Foreground="Red">0</Label>
+            </WrapPanel>
+        </GroupBox>
+
+        <GroupBox BorderBrush="Gray" BorderThickness="1" Foreground="OrangeRed" FontWeight="Bold" Header="Packets">
+            <WrapPanel Orientation="Horizontal">
+                <Label FontWeight="Medium">Packet Size</Label>
+                <Label Name="lbl_data_packet_size" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Generated Packets Count</Label>
+                <Label Name="lbl_Generated_Packets_Count" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Delivered Packets Count</Label>
+                <Label Name="lbl_Delivered_Packets_Count" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">In Queue Packets</Label>
+                <Label Name="lbl_In_Queue_Packets" Foreground="Red">0</Label>
+                <Label FontWeight="Medium">Dropped Packets Count</Label>
+                <Label Name="lbl_Dropped_Packets_Count" Foreground="Red">0</Label>
+            </WrapPanel>
+        </GroupBox>
+
+       
+
+        <GroupBox BorderBrush="Gray" BorderThickness="1"  Foreground="OrangeRed" FontWeight="Bold" Header="Perforamce">
+            <WrapPanel Orientation="Horizontal">
+                <Label FontWeight="Medium">Average Delay (s)</Label>
+                <Label Name="lbl_average_delay" Foreground="Red">0</Label>
+
+                <Label FontWeight="Medium">Average Hops</Label>
+                <Label Name="lbl_average_hops" Foreground="Red">0</Label>
+
+                <Label FontWeight="Medium">Average Routing Distance(m)</Label>
+                <Label Name="lbl_average_routing_distance" Foreground="Red">0</Label>
+
+
+                <Label FontWeight="Medium">Average Success Ratio(%)</Label>
+                <Label Name="lbl_Average_Success_Ratio" Foreground="Red">100</Label>
+                
+            </WrapPanel>
+        </GroupBox>
+
+        <GroupBox BorderBrush="Gray" BorderThickness="1" Foreground="OrangeRed" FontWeight="Bold" Header="Overhead">
+            <WrapPanel Orientation="Horizontal">
+
+            </WrapPanel>
+        </GroupBox>
+        
+    </StackPanel>
+</Window>
