@@ -13,9 +13,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using VANET_SIM.Operations;
+using VSIM.Operations;
 
-namespace VANET_SIM.RoadNet.Components
+namespace VSIM.RoadNet.Components
 {
     /// <summary>
     /// Interaction logic for LaneUi.xaml
@@ -425,13 +425,14 @@ namespace VANET_SIM.RoadNet.Components
                 string itemString = item.Header.ToString();
                 switch (itemString)
                 {
+
                     case "Horizontal":
                         if (MyRoadSegment.Roadorientation == RoadOrientation.Vertical)
                         {
                             MyRoadSegment.Roadorientation = RoadOrientation.Horizontal;
                             MyRoadSegment.stack_lanes.Children.Clear();
                             MyRoadSegment.Lanes.Clear();
-                            int x = Convert.ToInt16(PublicParamerters.NumberOfLanes);
+                            int x = Convert.ToInt16(MyRoadSegment.LanesCount);
                             MyRoadSegment.setHorizontalLayout(x);
                         }
                         break;
@@ -441,7 +442,7 @@ namespace VANET_SIM.RoadNet.Components
                             MyRoadSegment.Roadorientation = RoadOrientation.Vertical;
                             MyRoadSegment.stack_lanes.Children.Clear();
                             MyRoadSegment.Lanes.Clear();
-                            int x = Convert.ToInt16(PublicParamerters.NumberOfLanes);
+                            int x = Convert.ToInt16(MyRoadSegment.LanesCount);
                             MyRoadSegment.SetVerticalLayout(x);
                         }
                         break;
@@ -449,20 +450,87 @@ namespace VANET_SIM.RoadNet.Components
                         if (MyRoadSegment.Roadorientation == RoadOrientation.Vertical)
                         {
 
-                            RoadSegment x = new RoadSegment(_MainWindow, RoadOrientation.Vertical);
+                            RoadSegment x = new RoadSegment(_MainWindow, MyRoadSegment.LanesCount, RoadOrientation.Vertical);
                             Point po = Mouse.GetPosition(_MainWindow.canvas_vanet);
                             x.Margin = new Thickness(po.X + 20, po.Y + 10, 0, 0);
                             _MainWindow.canvas_vanet.Children.Add(x);
                         }
                         else
                         {
-                            RoadSegment x = new RoadSegment(_MainWindow, RoadOrientation.Horizontal);
+                            RoadSegment x = new RoadSegment(_MainWindow, MyRoadSegment.LanesCount, RoadOrientation.Horizontal);
                             Point po = Mouse.GetPosition(_MainWindow.canvas_vanet);
                             x.Margin = new Thickness(po.X + 20, po.Y + 10, 0, 0);
                             _MainWindow.canvas_vanet.Children.Add(x);
                         }
                         break;
+                    case "Two":
+                        if (MyRoadSegment.LanesCount != 2)
+                        {
+                            RoadSegment newx = new RoadSegment(_MainWindow, 2, MyRoadSegment.Roadorientation);
+                            newx.Margin = MyRoadSegment.Margin;
+                            newx.Height = MyRoadSegment.Height;
+                            newx.Width = MyRoadSegment.Width;
+                            _MainWindow.canvas_vanet.Children.Add(newx);
+                            _MainWindow.canvas_vanet.Children.Remove(MyRoadSegment);
+                            _MainWindow.MyRoadSegments.Remove(MyRoadSegment);
 
+                            if(newx.Roadorientation== RoadOrientation.Horizontal)
+                            {
+                                newx.Height = newx.LanesCount * PublicParamerters.LaneWidth +1.5;
+                            }
+                            else
+                            {
+                                newx.Width = newx.LanesCount * PublicParamerters.LaneWidth +1.5;
+                            }
+                        }
+
+                        break;
+
+                    case "Four":
+                        if (MyRoadSegment.LanesCount != 4)
+                        {
+                            RoadSegment newx = new RoadSegment(_MainWindow, 4, MyRoadSegment.Roadorientation);
+                            newx.Margin = MyRoadSegment.Margin;
+                            newx.Height = MyRoadSegment.Height;
+                            newx.Width = MyRoadSegment.Width;
+                            _MainWindow.canvas_vanet.Children.Add(newx);
+                            _MainWindow.canvas_vanet.Children.Remove(MyRoadSegment);
+                            _MainWindow.MyRoadSegments.Remove(MyRoadSegment);
+
+                            if (newx.Roadorientation == RoadOrientation.Horizontal)
+                            {
+                                newx.Height = newx.LanesCount * PublicParamerters.LaneWidth+1.5;
+                            }
+                            else
+                            {
+                                newx.Width = newx.LanesCount * PublicParamerters.LaneWidth+1.5;
+                            }
+                        }
+
+                        break;
+
+                    case "Six":
+                        if (MyRoadSegment.LanesCount != 6)
+                        {
+                            RoadSegment newx = new RoadSegment(_MainWindow, 6, MyRoadSegment.Roadorientation);
+                            newx.Margin = MyRoadSegment.Margin;
+                            newx.Height = MyRoadSegment.Height;
+                            newx.Width = MyRoadSegment.Width;
+                            _MainWindow.canvas_vanet.Children.Add(newx);
+                            _MainWindow.canvas_vanet.Children.Remove(MyRoadSegment);
+                            _MainWindow.MyRoadSegments.Remove(MyRoadSegment);
+
+                            if (newx.Roadorientation == RoadOrientation.Horizontal)
+                            {
+                                newx.Height = newx.LanesCount * PublicParamerters.LaneWidth+1.5;
+                            }
+                            else
+                            {
+                                newx.Width = newx.LanesCount * PublicParamerters.LaneWidth+1.5;
+                            }
+                        }
+
+                        break;
                     case "Delete":
                         try
                         {

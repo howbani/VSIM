@@ -12,10 +12,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using VANET_SIM.Operations;
-using VANET_SIM.Properties;
+using VSIM.Operations;
+using VSIM.Properties;
 
-namespace VANET_SIM.RoadNet.Components
+namespace VSIM.RoadNet.Components
 {
     /// <summary>
     /// Interaction logic for RoadSegment.xaml
@@ -27,7 +27,7 @@ namespace VANET_SIM.RoadNet.Components
         private double Yellow_Line_Height_6Lanes = 0.2;
         private double Yellow_Line_Height_4Lanes = 0.2;
         private double Yellow_Line_Height_2Lanes = 0.2;
-
+        public int LanesCount { get; set; }
         public DispatcherTimer RandomSwitchDirectionTimer = new DispatcherTimer(); 
         public DispatcherTimer ArrivalTimer = new DispatcherTimer(); 
         private Canvas myCanvas;
@@ -38,7 +38,7 @@ namespace VANET_SIM.RoadNet.Components
         public List<Junction> MyJunctions = new List<Junction>(2);
 
         /// <summary>
-        /// number of vehiles in the segment.
+        /// get number of vehiles in the segment.
         /// </summary>
         public int VehiclesCount
         {
@@ -53,9 +53,7 @@ namespace VANET_SIM.RoadNet.Components
             }
         }
 
-       
-
-        public RoadSegment(MainWindow MainWin, RoadOrientation _roadOrientation)
+        public RoadSegment(MainWindow MainWin, int lanCount, RoadOrientation _roadOrientation)
         {
             InitializeComponent();
             _MainWindow = MainWin;
@@ -69,13 +67,13 @@ namespace VANET_SIM.RoadNet.Components
 
             if (_roadOrientation == RoadOrientation.Vertical)
             {
-                int lc = Convert.ToInt16(PublicParamerters.NumberOfLanes);
-                SetVerticalLayout(lc);
+                LanesCount = lanCount;
+                SetVerticalLayout(lanCount);
             }
             else
             {
-                int lc = Convert.ToInt16(PublicParamerters.NumberOfLanes);
-                setHorizontalLayout(lc);
+                LanesCount = lanCount;
+                setHorizontalLayout(lanCount);
             }
 
             // set the switch timer.
@@ -93,58 +91,61 @@ namespace VANET_SIM.RoadNet.Components
         /// <param name="e"></param>
         private void RandomSwitchDirectionTimer_Tick(object sender, EventArgs e)
         {
-            if (PublicParamerters.NumberOfLanes <= 4)
+            Dispatcher.Invoke((Action)delegate
             {
-                foreach (LaneUi CurrentLane in Lanes) 
+                if (LanesCount <= 4)
                 {
-                    Direction randomDir = CurrentLane.RandomSwitchToDirection;
-                    Junction HeadJunc = CurrentLane.GetMyHeadingJunction;
-                    if (HeadJunc != null)
+                    foreach (LaneUi CurrentLane in Lanes)
                     {
-                        if (CurrentLane.CurrentSwitchToDirection != randomDir)
+                        Direction randomDir = CurrentLane.RandomSwitchToDirection;
+                        Junction HeadJunc = CurrentLane.GetMyHeadingJunction;
+                        if (HeadJunc != null)
                         {
-                            if (randomDir == Direction.S)
+                            if (CurrentLane.CurrentSwitchToDirection != randomDir)
                             {
-                                if (HeadJunc.ToSouthRoadSegment != null)
+                                if (randomDir == Direction.S)
                                 {
-                                    CurrentLane.CurrentSwitchToDirection = randomDir;
-                                   HeadJunc.ReLoadLanes();
+                                    if (HeadJunc.ToSouthRoadSegment != null)
+                                    {
+                                        CurrentLane.CurrentSwitchToDirection = randomDir;
+                                        HeadJunc.ReLoadLanes();
+                                    }
                                 }
-                            }
-                            else if (randomDir == Direction.N)
-                            {
-                                if (HeadJunc.ToNorthRoadSegment != null)
+                                else if (randomDir == Direction.N)
                                 {
-                                    CurrentLane.CurrentSwitchToDirection = randomDir;
-                                   HeadJunc.ReLoadLanes();
+                                    if (HeadJunc.ToNorthRoadSegment != null)
+                                    {
+                                        CurrentLane.CurrentSwitchToDirection = randomDir;
+                                        HeadJunc.ReLoadLanes();
+                                    }
                                 }
-                            }
-                            else if (randomDir == Direction.W)
-                            {
-                                if (HeadJunc.ToWestRoadSegment != null)
+                                else if (randomDir == Direction.W)
                                 {
-                                    CurrentLane.CurrentSwitchToDirection = randomDir;
-                                   HeadJunc.ReLoadLanes();
+                                    if (HeadJunc.ToWestRoadSegment != null)
+                                    {
+                                        CurrentLane.CurrentSwitchToDirection = randomDir;
+                                        HeadJunc.ReLoadLanes();
+                                    }
                                 }
-                            }
-                            else if (randomDir == Direction.E)
-                            {
-                                if (HeadJunc.ToEastRoadSegment != null)
+                                else if (randomDir == Direction.E)
                                 {
-                                    CurrentLane.CurrentSwitchToDirection = randomDir;
-                                   HeadJunc.ReLoadLanes();
+                                    if (HeadJunc.ToEastRoadSegment != null)
+                                    {
+                                        CurrentLane.CurrentSwitchToDirection = randomDir;
+                                        HeadJunc.ReLoadLanes();
+                                    }
                                 }
+                                RandomSwitchDirectionTimer.Interval = PublicParamerters.RoadSegmentSwitchDirectionTimerInterval;
                             }
-                            RandomSwitchDirectionTimer.Interval = PublicParamerters.RoadSegmentSwitchDirectionTimerInterval;
                         }
                     }
                 }
-            }
-            else
-            {
-                RandomSwitchDirectionTimer.Interval = TimeSpan.FromSeconds(0);
-                RandomSwitchDirectionTimer.Stop();
-            }
+                else
+                {
+                    RandomSwitchDirectionTimer.Interval = TimeSpan.FromSeconds(0);
+                    RandomSwitchDirectionTimer.Stop();
+                }
+            });
         }
 
         public void SetRoadColor()
@@ -303,9 +304,12 @@ namespace VANET_SIM.RoadNet.Components
 
         public void SetAsEntry()
         {
-            ArrivalTimer.Tick += ArrivalTimer_Tick;
-            ArrivalTimer.Interval = TimeSpan.FromSeconds(VehicleInterArrivalMean);
-            ArrivalTimer.Start();
+            Dispatcher.Invoke((Action)delegate
+            {
+                ArrivalTimer.Tick += ArrivalTimer_Tick;
+                ArrivalTimer.Interval = TimeSpan.FromSeconds(VehicleInterArrivalMean);
+                ArrivalTimer.Start();
+            });
         }
 
         public void stopGeneratingVehicles()
@@ -319,43 +323,142 @@ namespace VANET_SIM.RoadNet.Components
             ArrivalTimer.Start();
         }
 
-        public void DeployVehicle()
+        /// <summary>
+        /// the vehicle starts at the entry.
+        /// </summary>
+        public void DeployVehicleStartAtEntry( int index)
         {
-            VehicleUi vehicle = new VehicleUi();
-            vehicle.VID = _MainWindow.MyVehicles.Count;
-            LaneUi randomLane = Lanes[LaneIndex.RandomLaneIndex.ZeroToMax];
-            vehicle.CurrentLane = randomLane;
-            _MainWindow.canvas_vanet.Children.Add(vehicle);
-            _MainWindow.MyVehicles.Add(vehicle);
-            PublicStatistics.LiveStatstics.lbl_number_of_vehicles.Content = _MainWindow.MyVehicles.Count;
-            if (randomLane.LaneDirection == Direction.N)
+            Dispatcher.Invoke((Action)delegate
             {
-                double left = randomLane.MyCenterLeft;
-                double top = randomLane.MyCenterTop + this.Height - vehicle.Height;
-                vehicle.SetVehicleDirection(randomLane.LaneDirection);
-                vehicle.Margin = new Thickness(left, top, 0, 0);
-            }
-            else if (randomLane.LaneDirection == Direction.S)
+                VehicleUi vehicle = new VehicleUi();
+                vehicle.VID = _MainWindow.MyVehicles.Count;
+                LaneUi randomLane = Lanes[index];// Lanes[LaneIndex.RandomLaneIndex.ZeroToMax()];
+                vehicle.CurrentLane = randomLane;
+                _MainWindow.canvas_vanet.Children.Add(vehicle);
+                _MainWindow.MyVehicles.Add(vehicle);
+                PublicStatistics.LiveStatstics.lbl_number_of_vehicles.Content = _MainWindow.MyVehicles.Count;
+                if (randomLane.LaneDirection == Direction.N)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = randomLane.MyCenterTop + this.Height - vehicle.Height;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.S)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.E)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.W)
+                {
+                    double left = randomLane.MyCenterLeft + this.Width - vehicle.Width;
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+            });
+        }
+
+        /// <summary>
+        /// random start in the lane segments.
+        /// </summary>
+        /// <param name="Laneindex"></param>
+        public void DeployVehicleRandomStart(int Laneindex)  
+        {
+            Dispatcher.Invoke((Action)delegate
             {
-                double left = randomLane.MyCenterLeft;
-                double top = randomLane.MyCenterTop;
-                vehicle.SetVehicleDirection(randomLane.LaneDirection);
-                vehicle.Margin = new Thickness(left, top, 0, 0);
-            }
-            else if (randomLane.LaneDirection == Direction.E)
+                VehicleUi vehicle = new VehicleUi();
+                vehicle.VID = _MainWindow.MyVehicles.Count;
+                LaneUi randomLane = Lanes[Laneindex];
+                vehicle.CurrentLane = randomLane;
+                _MainWindow.canvas_vanet.Children.Add(vehicle);
+                _MainWindow.MyVehicles.Add(vehicle);
+                PublicStatistics.LiveStatstics.lbl_number_of_vehicles.Content = _MainWindow.MyVehicles.Count;
+                if (randomLane.LaneDirection == Direction.N)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = (randomLane.MyCenterTop + this.Height - vehicle.Height) - RandomeNumberGenerator.GetUniform(0, SegmentLength);
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.S)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = randomLane.MyCenterTop + RandomeNumberGenerator.GetUniform(0, SegmentLength);
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.E)
+                {
+                    double left = randomLane.MyCenterLeft + RandomeNumberGenerator.GetUniform(0, SegmentLength); ;
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.W)
+                {
+                    double left = (randomLane.MyCenterLeft + this.Width - vehicle.Width) - RandomeNumberGenerator.GetUniform(0, SegmentLength);
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+            });
+        }
+        /// <summary>
+        /// organize the vehicles such that the raod is maximum connected.!
+        /// vindex is the order in the lane.
+        /// </summary>
+        /// <param name="Laneindex"></param>
+        /// <param name="LocationInLane"></param>
+        public void DeployVehicleRandomStart(int Laneindex, double LocationInLane)
+        {
+            Dispatcher.Invoke((Action)delegate
             {
-                double left = randomLane.MyCenterLeft;
-                double top = randomLane.MyCenterTop;
-                vehicle.SetVehicleDirection(randomLane.LaneDirection);
-                vehicle.Margin = new Thickness(left, top, 0, 0);
-            }
-            else if (randomLane.LaneDirection == Direction.W)
-            {
-                double left = randomLane.MyCenterLeft + this.Width - vehicle.Width;
-                double top = randomLane.MyCenterTop;
-                vehicle.SetVehicleDirection(randomLane.LaneDirection);
-                vehicle.Margin = new Thickness(left, top, 0, 0);
-            }
+                VehicleUi vehicle = new VehicleUi();
+                vehicle.VID = _MainWindow.MyVehicles.Count;
+                LaneUi randomLane = Lanes[Laneindex];
+                vehicle.CurrentLane = randomLane;
+                _MainWindow.canvas_vanet.Children.Add(vehicle);
+                _MainWindow.MyVehicles.Add(vehicle);
+                PublicStatistics.LiveStatstics.lbl_number_of_vehicles.Content = _MainWindow.MyVehicles.Count;
+                if (randomLane.LaneDirection == Direction.N)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = (randomLane.MyCenterTop + this.Height - vehicle.Height) - LocationInLane;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.S)
+                {
+                    double left = randomLane.MyCenterLeft;
+                    double top = randomLane.MyCenterTop + LocationInLane;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.E)
+                {
+                    double left = randomLane.MyCenterLeft + LocationInLane;
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+                else if (randomLane.LaneDirection == Direction.W)
+                {
+                    double left = (randomLane.MyCenterLeft + this.Width - vehicle.Width) - LocationInLane;
+                    double top = randomLane.MyCenterTop;
+                    vehicle.SetVehicleDirection(randomLane.LaneDirection);
+                    vehicle.Margin = new Thickness(left, top, 0, 0);
+                }
+            });
         }
 
         private void ArrivalTimer_Tick(object sender, EventArgs e)
@@ -366,7 +469,8 @@ namespace VANET_SIM.RoadNet.Components
                 {
                     if (GenerateVehilesPossionDistrubtion)
                     {
-                        DeployVehicle();
+                        int Laneindex = LaneIndex.RandomLaneIndex.ZeroToMax(LanesCount);
+                        DeployVehicleStartAtEntry(Laneindex);
                     }
                 }
                 else
@@ -378,7 +482,8 @@ namespace VANET_SIM.RoadNet.Components
             {
                 if (GenerateVehilesPossionDistrubtion)
                 {
-                    DeployVehicle();
+                    int Laneindex = LaneIndex.RandomLaneIndex.ZeroToMax(LanesCount);
+                    DeployVehicleStartAtEntry(Laneindex);
                 }
             }
         }
@@ -464,414 +569,423 @@ namespace VANET_SIM.RoadNet.Components
 
         public void setHorizontalLayout(int lanesCount)
         {
-            if (lanesCount == 6)
+            Dispatcher.Invoke((Action)delegate
             {
-                Height = 22;
-                Width = 100;
-                stack_dispaly_in.Orientation = Orientation.Horizontal;
-                border_mian.BorderThickness = new Thickness(0, 0.5, 0, 0.5);
-                stack_lanes.Orientation = Orientation.Vertical;
+                if (lanesCount == 6)
+                {
+                    Height = 22;
+                    Width = 100;
+                    stack_dispaly_in.Orientation = Orientation.Horizontal;
+                    border_mian.BorderThickness = new Thickness(0, 0.5, 0, 0.5);
+                    stack_lanes.Orientation = Orientation.Vertical;
 
-                LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
-                stack_lanes.Children.Add(lane1);
-                lane1.LaneIndex = 0;
-                lane1.Lane.Height = PublicParamerters.LaneWidth;
-                lane1.Lane.Width = Double.NaN; // auto.
-                lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
-                lane1.LaneDirection = Direction.W;
-                lane1.MyRoadSegment = this;
-                lane1.SwitchToDirections.Add(Direction.N);
-                lane1.CurrentSwitchToDirection = Direction.N;
+                    LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
+                    stack_lanes.Children.Add(lane1);
+                    lane1.LaneIndex = 0;
+                    lane1.Lane.Height = PublicParamerters.LaneWidth;
+                    lane1.Lane.Width = Double.NaN; // auto.
+                    lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
+                    lane1.LaneDirection = Direction.W;
+                    lane1.MyRoadSegment = this;
+                    lane1.SwitchToDirections.Add(Direction.N);
+                    lane1.CurrentSwitchToDirection = Direction.N;
 
-                LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
-                lane2.LaneIndex = 1;
-                stack_lanes.Children.Add(lane2);
-                lane2.Lane.Height = PublicParamerters.LaneWidth;
-                lane2.Lane.Width = Double.NaN; // auto.
-                lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
-                lane2.LaneDirection = Direction.W;
-                lane2.MyRoadSegment = this;
-                lane2.SwitchToDirections.Add(Direction.W);
-                lane2.CurrentSwitchToDirection = Direction.W;
-
-
-                LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
-                lane3.LaneIndex = 2;
-                stack_lanes.Children.Add(lane3);
-                lane3.Lane.Height = PublicParamerters.LaneWidth;
-                lane3.Lane.Width = Double.NaN; // auto.
-                lane3.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane3.LaneDirection = Direction.W;
-                lane3.MyRoadSegment = this;
-                lane3.SwitchToDirections.Add(Direction.S);
-                lane3.CurrentSwitchToDirection = Direction.S;
-
-                YellowLine border_yellow_line = new YellowLine();
-                stack_lanes.Children.Add(border_yellow_line);
-                border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_6Lanes;
-                border_yellow_line.border_yellow_line.Width = Double.NaN;
-                MyYellowLine = border_yellow_line;
-
-                LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
-                lane4.LaneIndex = 3;
-                stack_lanes.Children.Add(lane4);
-                lane4.Lane.Height = PublicParamerters.LaneWidth;
-                lane4.Lane.Width = double.NaN; // auto.
-                lane4.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
-                lane4.LaneDirection = Direction.E;
-                lane4.MyRoadSegment = this;
-                lane4.SwitchToDirections.Add(Direction.N);
-                lane4.CurrentSwitchToDirection = Direction.N;
-
-                LaneUi lane5 = new LaneUi(LanesCaptions.Lane5);
-                lane5.LaneIndex = 4;
-                stack_lanes.Children.Add(lane5);
-                lane5.Lane.Height = PublicParamerters.LaneWidth;
-                lane5.Lane.Width = double.NaN; // auto.
-                lane5.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
-                lane5.LaneDirection = Direction.E;
-                lane5.MyRoadSegment = this;
-                lane5.SwitchToDirections.Add(Direction.E);
-                lane5.CurrentSwitchToDirection = Direction.E;
-
-                LaneUi lane6 = new LaneUi(LanesCaptions.Lane6);
-                lane6.LaneIndex = 5;
-                stack_lanes.Children.Add(lane6);
-                lane6.Lane.Height = PublicParamerters.LaneWidth;
-                lane6.Lane.Width = double.NaN; // auto.
-                lane6.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane6.LaneDirection = Direction.E;
-                lane6.MyRoadSegment = this;
-                lane6.SwitchToDirections.Add(Direction.S);
-                lane6.CurrentSwitchToDirection = Direction.S;
-
-                Lanes.Add(lane1);
-                Lanes.Add(lane2);
-                Lanes.Add(lane3);
-                Lanes.Add(lane4);
-                Lanes.Add(lane5);
-                Lanes.Add(lane6);
-            }
-            else if (lanesCount == 4)
-            {
-                Height = 14.6;
-                Width = 100;
-                stack_dispaly_in.Orientation = Orientation.Horizontal;
-                border_mian.BorderThickness = new Thickness(0, 0.5, 0, 0.5);
-                stack_lanes.Orientation = Orientation.Vertical;
-
-                LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
-                stack_lanes.Children.Add(lane1);
-                lane1.LaneIndex = 0;
-                lane1.Lane.Height = PublicParamerters.LaneWidth;
-                lane1.Lane.Width = Double.NaN; // auto.
-                lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
-                lane1.LaneDirection = Direction.W;
-                lane1.MyRoadSegment = this;
-                lane1.SwitchToDirections.Add(Direction.N);
-                lane1.SwitchToDirections.Add(Direction.W);
-                lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
-
-                LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
-                lane2.LaneIndex = 1;
-                stack_lanes.Children.Add(lane2);
-                lane2.Lane.Height = PublicParamerters.LaneWidth;
-                lane2.Lane.Width = Double.NaN; // auto.
-                lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane2.LaneDirection = Direction.W;
-                lane2.MyRoadSegment = this;
-                lane2.SwitchToDirections.Add(Direction.W);
-                lane2.SwitchToDirections.Add(Direction.S);
-                lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
-
-                YellowLine border_yellow_line = new YellowLine();
-                stack_lanes.Children.Add(border_yellow_line);
-                border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_4Lanes;
-                border_yellow_line.border_yellow_line.Width = Double.NaN;
-                MyYellowLine = border_yellow_line;
-
-                LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
-                lane3.LaneIndex = 2;
-                stack_lanes.Children.Add(lane3);
-                lane3.Lane.Height = PublicParamerters.LaneWidth;
-                lane3.Lane.Width = double.NaN; // auto.
-                lane3.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
-                lane3.LaneDirection = Direction.E;
-                lane3.MyRoadSegment = this;
-                lane3.SwitchToDirections.Add(Direction.N);
-                lane3.SwitchToDirections.Add(Direction.E);
-                lane3.CurrentSwitchToDirection = lane3.RandomSwitchToDirection;
-
-                LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
-                lane4.LaneIndex = 3;
-                stack_lanes.Children.Add(lane4);
-                lane4.Lane.Height = PublicParamerters.LaneWidth;
-                lane4.Lane.Width = double.NaN; // auto.
-                lane4.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane4.LaneDirection = Direction.E;
-                lane4.MyRoadSegment = this;
-                lane4.SwitchToDirections.Add(Direction.S);
-                lane4.SwitchToDirections.Add(Direction.E);
-                lane4.CurrentSwitchToDirection = lane4.RandomSwitchToDirection;
+                    LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
+                    lane2.LaneIndex = 1;
+                    stack_lanes.Children.Add(lane2);
+                    lane2.Lane.Height = PublicParamerters.LaneWidth;
+                    lane2.Lane.Width = Double.NaN; // auto.
+                    lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
+                    lane2.LaneDirection = Direction.W;
+                    lane2.MyRoadSegment = this;
+                    lane2.SwitchToDirections.Add(Direction.W);
+                    lane2.CurrentSwitchToDirection = Direction.W;
 
 
-                Lanes.Add(lane1);
-                Lanes.Add(lane2);
-                Lanes.Add(lane3);
-                Lanes.Add(lane4);
-            }
-            else if (lanesCount == 2)
-            {
-                Height = 8.5;
-                Width = 100;
-                stack_dispaly_in.Orientation = Orientation.Horizontal;
-                border_mian.BorderThickness = new Thickness(0, 0.5, 0, 0.5);
-                stack_lanes.Orientation = Orientation.Vertical;
+                    LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
+                    lane3.LaneIndex = 2;
+                    stack_lanes.Children.Add(lane3);
+                    lane3.Lane.Height = PublicParamerters.LaneWidth;
+                    lane3.Lane.Width = Double.NaN; // auto.
+                    lane3.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane3.LaneDirection = Direction.W;
+                    lane3.MyRoadSegment = this;
+                    lane3.SwitchToDirections.Add(Direction.S);
+                    lane3.CurrentSwitchToDirection = Direction.S;
 
-                LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
-                stack_lanes.Children.Add(lane1);
-                lane1.LaneIndex = 0;
-                lane1.Lane.Height = PublicParamerters.LaneWidth;
-                lane1.Lane.Width = Double.NaN; // auto.
-                lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane1.LaneDirection = Direction.W;
-                lane1.MyRoadSegment = this;
-                lane1.SwitchToDirections.Add(Direction.N);
-                lane1.SwitchToDirections.Add(Direction.W);
-                lane1.SwitchToDirections.Add(Direction.S);
-                lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
+                    YellowLine border_yellow_line = new YellowLine();
+                    stack_lanes.Children.Add(border_yellow_line);
+                    border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_6Lanes;
+                    border_yellow_line.border_yellow_line.Width = Double.NaN;
+                    MyYellowLine = border_yellow_line;
 
-                YellowLine border_yellow_line = new YellowLine();
-                stack_lanes.Children.Add(border_yellow_line);
-                border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_2Lanes;
-                border_yellow_line.border_yellow_line.Width = Double.NaN;
-                MyYellowLine = border_yellow_line;
+                    LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
+                    lane4.LaneIndex = 3;
+                    stack_lanes.Children.Add(lane4);
+                    lane4.Lane.Height = PublicParamerters.LaneWidth;
+                    lane4.Lane.Width = double.NaN; // auto.
+                    lane4.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
+                    lane4.LaneDirection = Direction.E;
+                    lane4.MyRoadSegment = this;
+                    lane4.SwitchToDirections.Add(Direction.N);
+                    lane4.CurrentSwitchToDirection = Direction.N;
 
-                LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
-                lane2.LaneIndex = 1;
-                stack_lanes.Children.Add(lane2);
-                lane2.Lane.Height = PublicParamerters.LaneWidth;
-                lane2.Lane.Width = double.NaN; // auto.
-                lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane2.LaneDirection = Direction.E;
-                lane2.MyRoadSegment = this;
-                lane2.SwitchToDirections.Add(Direction.N);
-                lane2.SwitchToDirections.Add(Direction.E);
-                lane2.SwitchToDirections.Add(Direction.S);
-                lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
+                    LaneUi lane5 = new LaneUi(LanesCaptions.Lane5);
+                    lane5.LaneIndex = 4;
+                    stack_lanes.Children.Add(lane5);
+                    lane5.Lane.Height = PublicParamerters.LaneWidth;
+                    lane5.Lane.Width = double.NaN; // auto.
+                    lane5.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
+                    lane5.LaneDirection = Direction.E;
+                    lane5.MyRoadSegment = this;
+                    lane5.SwitchToDirections.Add(Direction.E);
+                    lane5.CurrentSwitchToDirection = Direction.E;
 
-                Lanes.Add(lane1);
-                Lanes.Add(lane2);
-            }
+                    LaneUi lane6 = new LaneUi(LanesCaptions.Lane6);
+                    lane6.LaneIndex = 5;
+                    stack_lanes.Children.Add(lane6);
+                    lane6.Lane.Height = PublicParamerters.LaneWidth;
+                    lane6.Lane.Width = double.NaN; // auto.
+                    lane6.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane6.LaneDirection = Direction.E;
+                    lane6.MyRoadSegment = this;
+                    lane6.SwitchToDirections.Add(Direction.S);
+                    lane6.CurrentSwitchToDirection = Direction.S;
+
+                    Lanes.Add(lane1);
+                    Lanes.Add(lane2);
+                    Lanes.Add(lane3);
+                    Lanes.Add(lane4);
+                    Lanes.Add(lane5);
+                    Lanes.Add(lane6);
+                }
+                else if (lanesCount == 4)
+                {
+                    Height = 14.6;
+                    Width = 100;
+                    stack_dispaly_in.Orientation = Orientation.Horizontal;
+                    border_mian.BorderThickness = new Thickness(0, 0.5, 0, 0.5);
+                    stack_lanes.Orientation = Orientation.Vertical;
+
+                    LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
+                    stack_lanes.Children.Add(lane1);
+                    lane1.LaneIndex = 0;
+                    lane1.Lane.Height = PublicParamerters.LaneWidth;
+                    lane1.Lane.Width = Double.NaN; // auto.
+                    lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
+                    lane1.LaneDirection = Direction.W;
+                    lane1.MyRoadSegment = this;
+                    lane1.SwitchToDirections.Add(Direction.N);
+                    lane1.SwitchToDirections.Add(Direction.W);
+                    lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
+
+                    LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
+                    lane2.LaneIndex = 1;
+                    stack_lanes.Children.Add(lane2);
+                    lane2.Lane.Height = PublicParamerters.LaneWidth;
+                    lane2.Lane.Width = Double.NaN; // auto.
+                    lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane2.LaneDirection = Direction.W;
+                    lane2.MyRoadSegment = this;
+                    lane2.SwitchToDirections.Add(Direction.W);
+                    lane2.SwitchToDirections.Add(Direction.S);
+                    lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
+
+                    YellowLine border_yellow_line = new YellowLine();
+                    stack_lanes.Children.Add(border_yellow_line);
+                    border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_4Lanes;
+                    border_yellow_line.border_yellow_line.Width = Double.NaN;
+                    MyYellowLine = border_yellow_line;
+
+                    LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
+                    lane3.LaneIndex = 2;
+                    stack_lanes.Children.Add(lane3);
+                    lane3.Lane.Height = PublicParamerters.LaneWidth;
+                    lane3.Lane.Width = double.NaN; // auto.
+                    lane3.Lane.BorderThickness = new Thickness(0, 0, 0, 0.3);
+                    lane3.LaneDirection = Direction.E;
+                    lane3.MyRoadSegment = this;
+                    lane3.SwitchToDirections.Add(Direction.N);
+                    lane3.SwitchToDirections.Add(Direction.E);
+                    lane3.CurrentSwitchToDirection = lane3.RandomSwitchToDirection;
+
+                    LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
+                    lane4.LaneIndex = 3;
+                    stack_lanes.Children.Add(lane4);
+                    lane4.Lane.Height = PublicParamerters.LaneWidth;
+                    lane4.Lane.Width = double.NaN; // auto.
+                    lane4.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane4.LaneDirection = Direction.E;
+                    lane4.MyRoadSegment = this;
+                    lane4.SwitchToDirections.Add(Direction.S);
+                    lane4.SwitchToDirections.Add(Direction.E);
+                    lane4.CurrentSwitchToDirection = lane4.RandomSwitchToDirection;
+
+
+                    Lanes.Add(lane1);
+                    Lanes.Add(lane2);
+                    Lanes.Add(lane3);
+                    Lanes.Add(lane4);
+                }
+                else if (lanesCount == 2)
+                {
+                    Height = 8.5;
+                    Width = 100;
+                    stack_dispaly_in.Orientation = Orientation.Horizontal;
+                    border_mian.BorderThickness = new Thickness(0, 0.5, 0, 0.5);
+                    stack_lanes.Orientation = Orientation.Vertical;
+
+                    LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
+                    stack_lanes.Children.Add(lane1);
+                    lane1.LaneIndex = 0;
+                    lane1.Lane.Height = PublicParamerters.LaneWidth;
+                    lane1.Lane.Width = Double.NaN; // auto.
+                    lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane1.LaneDirection = Direction.W;
+                    lane1.MyRoadSegment = this;
+                    lane1.SwitchToDirections.Add(Direction.N);
+                    lane1.SwitchToDirections.Add(Direction.W);
+                    lane1.SwitchToDirections.Add(Direction.S);
+                    lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
+
+                    YellowLine border_yellow_line = new YellowLine();
+                    stack_lanes.Children.Add(border_yellow_line);
+                    border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_2Lanes;
+                    border_yellow_line.border_yellow_line.Width = Double.NaN;
+                    MyYellowLine = border_yellow_line;
+
+                    LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
+                    lane2.LaneIndex = 1;
+                    stack_lanes.Children.Add(lane2);
+                    lane2.Lane.Height = PublicParamerters.LaneWidth;
+                    lane2.Lane.Width = double.NaN; // auto.
+                    lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane2.LaneDirection = Direction.E;
+                    lane2.MyRoadSegment = this;
+                    lane2.SwitchToDirections.Add(Direction.N);
+                    lane2.SwitchToDirections.Add(Direction.E);
+                    lane2.SwitchToDirections.Add(Direction.S);
+                    lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
+
+                    Lanes.Add(lane1);
+                    Lanes.Add(lane2);
+                }
+            });
         }
 
         public void SetVerticalLayout(int lanesCount)
         {
-            if (lanesCount == 6)
+            Dispatcher.Invoke((Action)delegate
             {
-                Height = 100;
-                Width = 22;
-                stack_dispaly_in.Orientation = Orientation.Vertical;
-                border_mian.BorderThickness = new Thickness(0.5, 0, 0.5, 0);
-                stack_lanes.Orientation = Orientation.Horizontal;
+                if (lanesCount == 6)
+                {
+                    Height = 100;
+                    Width = 22;
+                    stack_dispaly_in.Orientation = Orientation.Vertical;
+                    border_mian.BorderThickness = new Thickness(0.5, 0, 0.5, 0);
+                    stack_lanes.Orientation = Orientation.Horizontal;
 
 
-                LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
-                lane1.LaneIndex = 0;
-                stack_lanes.Children.Add(lane1);
-                lane1.Lane.Width = PublicParamerters.LaneWidth;
-                lane1.Lane.Height = Double.NaN; // auto.
-                lane1.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
-                lane1.LaneDirection = Direction.S;
-                lane1.MyRoadSegment = this;
-                lane1.SwitchToDirections.Add(Direction.W); //
-                lane1.CurrentSwitchToDirection = Direction.W;
+                    LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
+                    lane1.LaneIndex = 0;
+                    stack_lanes.Children.Add(lane1);
+                    lane1.Lane.Width = PublicParamerters.LaneWidth;
+                    lane1.Lane.Height = Double.NaN; // auto.
+                    lane1.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
+                    lane1.LaneDirection = Direction.S;
+                    lane1.MyRoadSegment = this;
+                    lane1.SwitchToDirections.Add(Direction.W); //
+                    lane1.CurrentSwitchToDirection = Direction.W;
 
 
-                LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
-                lane2.LaneIndex = 1;
-                stack_lanes.Children.Add(lane2);
-                lane2.Lane.Width = PublicParamerters.LaneWidth;
-                lane2.Lane.Height = Double.NaN; // auto.
-                lane2.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
-                lane2.LaneDirection = Direction.S;
-                lane2.MyRoadSegment = this;
-                lane2.SwitchToDirections.Add( Direction.S); // direct.
-                lane2.CurrentSwitchToDirection = Direction.S;
+                    LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
+                    lane2.LaneIndex = 1;
+                    stack_lanes.Children.Add(lane2);
+                    lane2.Lane.Width = PublicParamerters.LaneWidth;
+                    lane2.Lane.Height = Double.NaN; // auto.
+                    lane2.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
+                    lane2.LaneDirection = Direction.S;
+                    lane2.MyRoadSegment = this;
+                    lane2.SwitchToDirections.Add(Direction.S); // direct.
+                    lane2.CurrentSwitchToDirection = Direction.S;
 
-                LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
-                lane3.LaneIndex = 2;
-                stack_lanes.Children.Add(lane3);
-                lane3.Lane.Width = PublicParamerters.LaneWidth;
-                lane3.Lane.Height = Double.NaN; // auto.
-                lane3.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane3.LaneDirection = Direction.S;
-                lane3.MyRoadSegment = this;
-                lane3.SwitchToDirections.Add(Direction.E);
-                lane3.CurrentSwitchToDirection = Direction.E;
-
-
-                YellowLine border_yellow_line = new YellowLine();
-                stack_lanes.Children.Add(border_yellow_line);
-                border_yellow_line.border_yellow_line.Width = Yellow_Line_Height_6Lanes;
-                border_yellow_line.border_yellow_line.Height = Double.NaN;
-                MyYellowLine = border_yellow_line;
-
-                LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
-                lane4.LaneIndex = 3;
-                stack_lanes.Children.Add(lane4);
-                lane4.Lane.Width = PublicParamerters.LaneWidth;
-                lane4.Lane.Height = Double.NaN; // auto.
-                lane4.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
-                lane4.LaneDirection = Direction.N;
-                lane4.MyRoadSegment = this;
-                lane4.SwitchToDirections.Add(Direction.W);
-                lane4.CurrentSwitchToDirection = Direction.W;
-
-                LaneUi lane5 = new LaneUi(LanesCaptions.Lane5);
-                lane5.LaneIndex = 4;
-                stack_lanes.Children.Add(lane5);
-                lane5.Lane.Width = PublicParamerters.LaneWidth;
-                lane5.Lane.Height = Double.NaN; // auto.
-                lane4.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
-                lane5.LaneDirection = Direction.N;
-                lane5.MyRoadSegment = this;
-                lane5.SwitchToDirections.Add(Direction.N);// direct.
-                lane5.CurrentSwitchToDirection = Direction.N;
+                    LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
+                    lane3.LaneIndex = 2;
+                    stack_lanes.Children.Add(lane3);
+                    lane3.Lane.Width = PublicParamerters.LaneWidth;
+                    lane3.Lane.Height = Double.NaN; // auto.
+                    lane3.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane3.LaneDirection = Direction.S;
+                    lane3.MyRoadSegment = this;
+                    lane3.SwitchToDirections.Add(Direction.E);
+                    lane3.CurrentSwitchToDirection = Direction.E;
 
 
-                LaneUi lane6 = new LaneUi(LanesCaptions.Lane6);
-                lane6.LaneIndex = 5;
-                stack_lanes.Children.Add(lane6);
-                lane6.Lane.Width = PublicParamerters.LaneWidth;
-                lane6.Lane.Height = Double.NaN; // auto.
-                lane6.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane6.LaneDirection = Direction.N;
-                lane6.MyRoadSegment = this;
-                lane6.SwitchToDirections.Add(Direction.E);
-                lane6.CurrentSwitchToDirection = Direction.E;
+                    YellowLine border_yellow_line = new YellowLine();
+                    stack_lanes.Children.Add(border_yellow_line);
+                    border_yellow_line.border_yellow_line.Width = Yellow_Line_Height_6Lanes;
+                    border_yellow_line.border_yellow_line.Height = Double.NaN;
+                    MyYellowLine = border_yellow_line;
 
-                Lanes.Add(lane1);
-                Lanes.Add(lane2);
-                Lanes.Add(lane3);
-                Lanes.Add(lane4);
-                Lanes.Add(lane5);
-                Lanes.Add(lane6);
-            }
-            else if (lanesCount == 4)
-            {
-                Height = 100;
-                Width = 14.6;
-                stack_dispaly_in.Orientation = Orientation.Vertical;
-                border_mian.BorderThickness = new Thickness(0.5, 0, 0.5, 0);
-                stack_lanes.Orientation = Orientation.Horizontal;
+                    LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
+                    lane4.LaneIndex = 3;
+                    stack_lanes.Children.Add(lane4);
+                    lane4.Lane.Width = PublicParamerters.LaneWidth;
+                    lane4.Lane.Height = Double.NaN; // auto.
+                    lane4.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
+                    lane4.LaneDirection = Direction.N;
+                    lane4.MyRoadSegment = this;
+                    lane4.SwitchToDirections.Add(Direction.W);
+                    lane4.CurrentSwitchToDirection = Direction.W;
 
-
-                LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
-                lane1.LaneIndex = 0;
-                stack_lanes.Children.Add(lane1);
-                lane1.Lane.Width = PublicParamerters.LaneWidth;
-                lane1.Lane.Height = Double.NaN; // auto.
-                lane1.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
-                lane1.LaneDirection = Direction.S;
-                lane1.MyRoadSegment = this;
-                lane1.SwitchToDirections.Add(Direction.W); // this can go to south too. may be can be set randomly.
-                lane1.SwitchToDirections.Add(Direction.S); // two.
-                lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
-
-                LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
-                lane2.LaneIndex = 1;
-                stack_lanes.Children.Add(lane2);
-                lane2.Lane.Width = PublicParamerters.LaneWidth;
-                lane2.Lane.Height = Double.NaN; // auto.
-                lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane2.LaneDirection = Direction.S;
-                lane2.MyRoadSegment = this;
-                lane2.SwitchToDirections.Add(Direction.S); // this can be go to east
-                lane2.SwitchToDirections.Add(Direction.E);
-                lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
-
-                YellowLine border_yellow_line = new YellowLine();
-                stack_lanes.Children.Add(border_yellow_line);
-                border_yellow_line.border_yellow_line.Width = Yellow_Line_Height_4Lanes;
-                border_yellow_line.border_yellow_line.Height = Double.NaN;
-
-                MyYellowLine = border_yellow_line;
-
-                LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
-                lane3.LaneIndex = 2;
-                stack_lanes.Children.Add(lane3);
-                lane3.Lane.Width = PublicParamerters.LaneWidth;
-                lane3.Lane.Height = Double.NaN; // auto.
-                lane3.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
-                lane3.LaneDirection = Direction.N;
-                lane3.MyRoadSegment = this;
-                lane3.SwitchToDirections .Add( Direction.W); // can go to north too.
-                lane3.SwitchToDirections.Add(Direction.N);
-                lane3.CurrentSwitchToDirection = lane3.RandomSwitchToDirection;
-
-                LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
-                lane4.LaneIndex = 3;
-                stack_lanes.Children.Add(lane4);
-                lane4.Lane.Width = PublicParamerters.LaneWidth;
-                lane4.Lane.Height = Double.NaN; // auto.
-                lane4.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane4.LaneDirection = Direction.N;
-                lane4.MyRoadSegment = this;
-                lane4.SwitchToDirections.Add(Direction.N); // can go to east too.
-                lane4.SwitchToDirections.Add(Direction.E);
-                lane4.CurrentSwitchToDirection = lane4.RandomSwitchToDirection;
-
-                Lanes.Add(lane1);
-                Lanes.Add(lane2);
-                Lanes.Add(lane3);
-                Lanes.Add(lane4);
-            }
-            else if (lanesCount == 2)
-            {
-                Height = 100;
-                Width = 9.5;
-                stack_dispaly_in.Orientation = Orientation.Vertical;
-                border_mian.BorderThickness = new Thickness(0.5, 0, 0.5, 0);
-                stack_lanes.Orientation = Orientation.Horizontal;
+                    LaneUi lane5 = new LaneUi(LanesCaptions.Lane5);
+                    lane5.LaneIndex = 4;
+                    stack_lanes.Children.Add(lane5);
+                    lane5.Lane.Width = PublicParamerters.LaneWidth;
+                    lane5.Lane.Height = Double.NaN; // auto.
+                    lane4.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
+                    lane5.LaneDirection = Direction.N;
+                    lane5.MyRoadSegment = this;
+                    lane5.SwitchToDirections.Add(Direction.N);// direct.
+                    lane5.CurrentSwitchToDirection = Direction.N;
 
 
-                LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
-                lane1.LaneIndex = 0;
-                stack_lanes.Children.Add(lane1);
-                lane1.Lane.Width = PublicParamerters.LaneWidth;
-                lane1.Lane.Height = Double.NaN; // auto.
-                lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane1.LaneDirection = Direction.S;
-                lane1.MyRoadSegment = this;
-                lane1.SwitchToDirections.Add( Direction.S); //
-                lane1.SwitchToDirections.Add(Direction.E); //
-                lane1.SwitchToDirections.Add(Direction.W); //
-                lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
+                    LaneUi lane6 = new LaneUi(LanesCaptions.Lane6);
+                    lane6.LaneIndex = 5;
+                    stack_lanes.Children.Add(lane6);
+                    lane6.Lane.Width = PublicParamerters.LaneWidth;
+                    lane6.Lane.Height = Double.NaN; // auto.
+                    lane6.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane6.LaneDirection = Direction.N;
+                    lane6.MyRoadSegment = this;
+                    lane6.SwitchToDirections.Add(Direction.E);
+                    lane6.CurrentSwitchToDirection = Direction.E;
 
-                YellowLine border_yellow_line = new YellowLine();
-                stack_lanes.Children.Add(border_yellow_line);
-                border_yellow_line.border_yellow_line.Height = Yellow_Line_Height_2Lanes;
-                border_yellow_line.border_yellow_line.Height = Double.NaN;
-                MyYellowLine = border_yellow_line;
+                    Lanes.Add(lane1);
+                    Lanes.Add(lane2);
+                    Lanes.Add(lane3);
+                    Lanes.Add(lane4);
+                    Lanes.Add(lane5);
+                    Lanes.Add(lane6);
+                }
+                else if (lanesCount == 4)
+                {
+                    Height = 100;
+                    Width = 14.6;
+                    stack_dispaly_in.Orientation = Orientation.Vertical;
+                    border_mian.BorderThickness = new Thickness(0.5, 0, 0.5, 0);
+                    stack_lanes.Orientation = Orientation.Horizontal;
 
 
-                LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
-                lane2.LaneIndex = 1;
-                stack_lanes.Children.Add(lane2);
-                lane2.Lane.Width = PublicParamerters.LaneWidth;
-                lane2.Lane.Height = Double.NaN; // auto.
-                lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
-                lane2.LaneDirection = Direction.N;
-                lane2.MyRoadSegment = this;
-                lane2.SwitchToDirections .Add( Direction.N); // direct.
-                lane2.SwitchToDirections.Add(Direction.W); // direct.
-                lane2.SwitchToDirections.Add(Direction.E); // direct.
-                lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
+                    LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
+                    lane1.LaneIndex = 0;
+                    stack_lanes.Children.Add(lane1);
+                    lane1.Lane.Width = PublicParamerters.LaneWidth;
+                    lane1.Lane.Height = Double.NaN; // auto.
+                    lane1.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
+                    lane1.LaneDirection = Direction.S;
+                    lane1.MyRoadSegment = this;
+                    lane1.SwitchToDirections.Add(Direction.W); // this can go to south too. may be can be set randomly.
+                    lane1.SwitchToDirections.Add(Direction.S); // two.
+                    lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
 
-                Lanes.Add(lane1);
-                Lanes.Add(lane2);
-            }
+                    LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
+                    lane2.LaneIndex = 1;
+                    stack_lanes.Children.Add(lane2);
+                    lane2.Lane.Width = PublicParamerters.LaneWidth;
+                    lane2.Lane.Height = Double.NaN; // auto.
+                    lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane2.LaneDirection = Direction.S;
+                    lane2.MyRoadSegment = this;
+                    lane2.SwitchToDirections.Add(Direction.S); // this can be go to east
+                    lane2.SwitchToDirections.Add(Direction.E);
+                    lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
+
+                    YellowLine border_yellow_line = new YellowLine();
+                    stack_lanes.Children.Add(border_yellow_line);
+                    border_yellow_line.border_yellow_line.Width = Yellow_Line_Height_4Lanes;
+                    border_yellow_line.border_yellow_line.Height = Double.NaN;
+
+                    MyYellowLine = border_yellow_line;
+
+                    LaneUi lane3 = new LaneUi(LanesCaptions.Lane3);
+                    lane3.LaneIndex = 2;
+                    stack_lanes.Children.Add(lane3);
+                    lane3.Lane.Width = PublicParamerters.LaneWidth;
+                    lane3.Lane.Height = Double.NaN; // auto.
+                    lane3.Lane.BorderThickness = new Thickness(0, 0, 0.3, 0);
+                    lane3.LaneDirection = Direction.N;
+                    lane3.MyRoadSegment = this;
+                    lane3.SwitchToDirections.Add(Direction.W); // can go to north too.
+                    lane3.SwitchToDirections.Add(Direction.N);
+                    lane3.CurrentSwitchToDirection = lane3.RandomSwitchToDirection;
+
+                    LaneUi lane4 = new LaneUi(LanesCaptions.Lane4);
+                    lane4.LaneIndex = 3;
+                    stack_lanes.Children.Add(lane4);
+                    lane4.Lane.Width = PublicParamerters.LaneWidth;
+                    lane4.Lane.Height = Double.NaN; // auto.
+                    lane4.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane4.LaneDirection = Direction.N;
+                    lane4.MyRoadSegment = this;
+                    lane4.SwitchToDirections.Add(Direction.N); // can go to east too.
+                    lane4.SwitchToDirections.Add(Direction.E);
+                    lane4.CurrentSwitchToDirection = lane4.RandomSwitchToDirection;
+
+                    Lanes.Add(lane1);
+                    Lanes.Add(lane2);
+                    Lanes.Add(lane3);
+                    Lanes.Add(lane4);
+                }
+                else if (lanesCount == 2)
+                {
+                    Height = 100;
+                    Width = 9.5;
+                    stack_dispaly_in.Orientation = Orientation.Vertical;
+                    border_mian.BorderThickness = new Thickness(0.5, 0, 0.5, 0);
+                    stack_lanes.Orientation = Orientation.Horizontal;
+
+
+                    LaneUi lane1 = new LaneUi(LanesCaptions.Lane1);
+                    lane1.LaneIndex = 0;
+                    stack_lanes.Children.Add(lane1);
+                    lane1.Lane.Width = PublicParamerters.LaneWidth;
+                    lane1.Lane.Height = Double.NaN; // auto.
+                    lane1.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane1.LaneDirection = Direction.S;
+                    lane1.MyRoadSegment = this;
+                    lane1.SwitchToDirections.Add(Direction.S); //
+                    lane1.SwitchToDirections.Add(Direction.E); //
+                    lane1.SwitchToDirections.Add(Direction.W); //
+                    lane1.CurrentSwitchToDirection = lane1.RandomSwitchToDirection;
+
+                    YellowLine border_yellow_line = new YellowLine();
+                    stack_lanes.Children.Add(border_yellow_line);
+                    border_yellow_line.border_yellow_line.Height = Double.NaN;
+                    border_yellow_line.border_yellow_line.Width = Yellow_Line_Height_2Lanes;
+                    MyYellowLine = border_yellow_line;
+
+
+                    LaneUi lane2 = new LaneUi(LanesCaptions.Lane2);
+                    lane2.LaneIndex = 1;
+                    stack_lanes.Children.Add(lane2);
+                    lane2.Lane.Width = PublicParamerters.LaneWidth;
+                    lane2.Lane.Height = Double.NaN; // auto.
+                    lane2.Lane.BorderThickness = new Thickness(0, 0, 0, 0);
+                    lane2.LaneDirection = Direction.N;
+                    lane2.MyRoadSegment = this;
+                    lane2.SwitchToDirections.Add(Direction.N); // direct.
+                    lane2.SwitchToDirections.Add(Direction.W); // direct.
+                    lane2.SwitchToDirections.Add(Direction.E); // direct.
+                    lane2.CurrentSwitchToDirection = lane2.RandomSwitchToDirection;
+
+                    Lanes.Add(lane1);
+                    Lanes.Add(lane2);
+
+
+
+                }
+            });
         }
 
 

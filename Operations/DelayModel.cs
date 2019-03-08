@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VANET_SIM.RoadNet.Components;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.Operations
+namespace VSIM.Operations
 {
     // FOR CODE SEE:http://ns2.sourcearchive.com/documentation/2.35~RC4-1/threshold_8cc-source.html
     /// <summary>

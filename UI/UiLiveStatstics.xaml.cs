@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace VANET_SIM.UI
+namespace VSIM.UI
 {
     /// <summary>
     /// Interaction logic for UiLiveStatstics.xaml
@@ -19,24 +19,39 @@ namespace VANET_SIM.UI
     public partial class UiLiveStatstics : Window
     {
       
-
+        public bool IsCloseUable
+        {
+            get;set;
+        }
         public UiLiveStatstics()
         {
             InitializeComponent();
 
             this.Left = SystemParameters.FullPrimaryScreenWidth-this.Width;
-            this.Top = SystemParameters.FullPrimaryScreenHeight-this.Height;
-           // this.Height = SystemParameters.FullPrimaryScreenHeight;
+            this.Top = 60; // SystemParameters.FullPrimaryScreenHeight-this.Height;
+                           // this.Height = SystemParameters.FullPrimaryScreenHeight;
+
+            
         }
 
-        private void Window_Closed(object sender, EventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-           
-        }
+            try
+            {
+                if (IsCloseUable)
+                {
+                    Close();
+                }
+                else
+                {
+                    e.Cancel = true;
+                    Hide();
+                }
+            }
+            catch
+            {
 
-        private void Window_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
+            }
         }
     }
 }

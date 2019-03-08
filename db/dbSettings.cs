@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace VANET_SIM.db
+namespace VSIM.db
 {
     public class dbSettings
     {

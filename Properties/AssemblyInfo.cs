@@ -7,13 +7,13 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VANET_SIM")]
+[assembly: AssemblyTitle("VSIM")]
 [assembly: AssemblyDescription("Vanet Simulator")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ammar Hawbani")]
 [assembly: AssemblyProduct("VANET_SIM")]
 [assembly: AssemblyCopyright("Copyright ©  2018")]
-[assembly: AssemblyTrademark("Vanet Simulator")]
+[assembly: AssemblyTrademark("VSIM")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

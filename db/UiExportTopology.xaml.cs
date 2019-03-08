@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
-using VANET_SIM.RoadNet.Components;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.db
+namespace VSIM.db
 {
     /// <summary>
     /// Interaction logic for UiExportTopology.xaml
@@ -32,7 +32,6 @@ namespace VANET_SIM.db
                     com.Width = jun.Width;
                     com.Height = jun.Height;
                     com.ComponentType = ComponentType.Junction;
-
                     topolog.SaveVanetComponent(com, txt_networkName.Text);
                 }
 
@@ -48,7 +47,7 @@ namespace VANET_SIM.db
                     com.Height = seg.Height;
                     com.ComponentType = ComponentType.RoadSegment;
                     com.RoadOrientation = seg.Roadorientation;
-
+                    com.LanesCount = seg.LanesCount;
                     topolog.SaveVanetComponent(com, txt_networkName.Text);
                 }
 

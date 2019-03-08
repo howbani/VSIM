@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using VANET_SIM.Operations;
-using VANET_SIM.RoadNet.Components;
+using VSIM.Operations;
+using VSIM.Properties;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.Routing
+namespace VSIM.Routing
 {
     public class CandidateJunction
     {
@@ -21,7 +22,7 @@ namespace VANET_SIM.Routing
         {  //heuristic 
             get
             {
-                double wiCon = Properties.Settings.Default.WeightConn;
+                double wiCon = Properties.Settings.Default.WeightConnectivity;
                 double wdis = Properties.Settings.Default.WeightShortestDistance;
                 return (wdis * ShortestDistance) + (wiCon * Connectivity);
             }
@@ -117,7 +118,7 @@ namespace VANET_SIM.Routing
 
                     can.Length = computer.Length(_i.CenterLocation, _j.CenterLocation);
                     //-2 connectivity.
-                    can.Connectivity = connect.SegmentConnectivity(roadSegment.SegmentLength, roadSegment.VehiclesCount, roadSegment.VehicleInterArrivalMean, PublicParamerters.CommunicationRaduis, PublicParamerters.NumberOfLanes);
+                    can.Connectivity = connect.SegmentConnectivity(roadSegment.SegmentLength, roadSegment.VehiclesCount, roadSegment.VehicleInterArrivalMean, Settings.Default.CommunicationRange, roadSegment.LanesCount);
 
 
                     candidateJunctions.Add(can);

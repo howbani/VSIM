@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace VANET_SIM.UI
+namespace VSIM.UI
 {
     /// <summary>
     /// Interaction logic for UiShowResults.xaml

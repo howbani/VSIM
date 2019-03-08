@@ -1,9 +1,9 @@
-﻿<UserControl x:Class="VANET_SIM.RoadNet.Components.LaneUi"
+﻿<UserControl x:Class="VSIM.RoadNet.Components.LaneUi"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:VANET_SIM.RoadNet.Components"
+             xmlns:local="clr-namespace:VSIM.RoadNet.Components"
              
              
              mc:Ignorable="d" 
@@ -35,6 +35,11 @@
                     <MenuItem Header="Orientation">
                         <MenuItem Click="MenuItem_Click"  Header="Horizontal"/>
                         <MenuItem Click="MenuItem_Click"  Header="Vertical"/>
+                    </MenuItem>
+                    <MenuItem Header="Lanes">
+                        <MenuItem Click="MenuItem_Click"  Header="Two"/>
+                        <MenuItem Click="MenuItem_Click"  Header="Four"/>
+                        <MenuItem Click="MenuItem_Click"  Header="Six"/>
                     </MenuItem>
                     <MenuItem Header="Delete" Click="MenuItem_Click"/>
                 </ContextMenu>

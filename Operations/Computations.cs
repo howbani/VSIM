@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using VANET_SIM.RoadNet.Components;
-namespace VANET_SIM.Operations
+using VSIM.Properties;
+using VSIM.RoadNet.Components;
+namespace VSIM.Operations
 {
     public static class Computations
     {
@@ -43,8 +44,8 @@ namespace VANET_SIM.Operations
         public static double GetTimeIntervalInSecond(double speedkhh)
         {
             if (speedkhh <= 0) return 0;
-            else if (speedkhh >= PublicParamerters.MaxSpeed)
-                return UnitsConverter.KmphToTimerInterval(PublicParamerters.MaxSpeed); // can't exceed the max speed.
+            else if (speedkhh >= Settings.Default.MaxSpeed)
+                return UnitsConverter.KmphToTimerInterval(Settings.Default.MaxSpeed); // can't exceed the max speed.
             else return UnitsConverter.KmphToTimerInterval(speedkhh);
         }
 
@@ -71,15 +72,15 @@ namespace VANET_SIM.Operations
         {
             get
             {
-                double ran = RandomeNumberGenerator.GetNormal(PublicParamerters.MaxSpeed, PublicParamerters.SpeedStandardDeviation);
-                if (ran > PublicParamerters.MaxSpeed * 2)
+                double ran = RandomeNumberGenerator.GetNormal(Settings.Default.MaxSpeed, PublicParamerters.SpeedStandardDeviation);
+                if (ran > Settings.Default.MaxSpeed * 2)
                 {
-                    ran = PublicParamerters.MaxSpeed + RandomeNumberGenerator.GetUniform(PublicParamerters.MinSpeed);
+                    ran = Settings.Default.MaxSpeed + RandomeNumberGenerator.GetUniform(Settings.Default.MinSpeed);
                 }
 
-                if (ran <= PublicParamerters.MinSpeed)
+                if (ran <= Settings.Default.MinSpeed)
                 {
-                    ran = PublicParamerters.MeanSpeed + RandomeNumberGenerator.GetUniform(PublicParamerters.MinSpeed);
+                    ran = PublicParamerters.MeanSpeed + RandomeNumberGenerator.GetUniform(Settings.Default.MinSpeed);
                 }
               
                 return ran;
@@ -104,8 +105,8 @@ namespace VANET_SIM.Operations
                 {
                     ran = PublicParamerters.VehicleInterArrivalStandardDeviation + RandomeNumberGenerator.GetUniform(2);
                 }
-                
-                return ran / PublicParamerters.NumberOfLanes;
+
+                return ran;
 
             }
         }

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VANET_SIM.RoadNet.Components;
-namespace VANET_SIM.Operations
+using VSIM.RoadNet.Components;
+namespace VSIM.Operations
 {
     class BuildRoadNetwork
     {

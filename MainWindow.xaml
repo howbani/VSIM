@@ -1,30 +1,41 @@
-﻿<Window x:Class="VANET_SIM.MainWindow"
+﻿<Window x:Class="VSIM.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VANET_SIM"
+        xmlns:local="clr-namespace:VSIM"
         mc:Ignorable="d"
         Loaded="Window_Loaded"
         Closing="Window_Closing"
         WindowState="Maximized"
         Background="Transparent"
         WindowStartupLocation="CenterScreen"
-        Title="Hero" Height="350" Width="525">
+        Title="VSIM" Height="350" Width="525">
 
     <Border>
         <StackPanel>
             <DockPanel IsEnabled="True" Name="top_menu">
                 <Menu DockPanel.Dock="Top">
+
+                    <MenuItem Name="btn_experment" Click="Btn_experment_Click" Header="Experments" >
+
+                    </MenuItem>
+                    
                     <MenuItem  Header="Road Network">
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Network Generator" />
                         <MenuItem Click="ComponentMenuItem_Click" Header="_Add Junction" />
-                        <MenuItem Click="ComponentMenuItem_Click" Header="_Add Road Segment" />
+                        <MenuItem Click="ComponentMenuItem_Click" Header="_Add Road Segment">
+                            <MenuItem Click="ComponentMenuItem_Click" Header="_Two Lanes" />
+                            <MenuItem Click="ComponentMenuItem_Click" Header="_Four Lanes" />
+                            <MenuItem Click="ComponentMenuItem_Click" Header="_Six Lanes" />
+                        </MenuItem>
                         <MenuItem Click="ComponentMenuItem_Click" Header="_Import Vanet" />
                         <MenuItem Click="ComponentMenuItem_Click" Header="_Export Vanet" />
-
+ 
                         <MenuItem Click="ComponentMenuItem_Click" Header="_Clear" />
                     </MenuItem>
 
+                  
                     <MenuItem  Header="Vehicles">
                         <MenuItem Header="Vehicles's Number">
                             <MenuItem Click="btn_set_number_of_vechiles" Header="Unlimited"/>
@@ -100,7 +111,10 @@
                     </MenuItem>
 
                     <MenuItem  Header="Resultes">
-                        <MenuItem Click="btn_show_results"  Header="_Show Packets" />
+                        <MenuItem Click="btn_show_results" Header="_Show Live Results"/>
+                        <MenuItem Click="btn_show_results"  Header="_Show Results Details" />
+                        <MenuItem Click="btn_show_results"  Header="_Print Results" />
+                       
                     </MenuItem>
                     
                 </Menu>
@@ -117,7 +131,7 @@
                         </StackPanel>
                     </TabItem.Header>
                     <ScrollViewer Name="vanet_scroller" Margin="0,1,0,0" CanContentScroll="True" SnapsToDevicePixels="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" PanningMode="HorizontalOnly" DataContext="{Binding}">
-                        <Canvas  Background="Transparent"  Name="canvas_vanet" Height="500"></Canvas>
+                        <Canvas  Background="Transparent"  Name="canvas_vanet" Height="267"></Canvas>
                     </ScrollViewer>
                 </TabItem>
                 

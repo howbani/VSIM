@@ -1,0 +1,15 @@
+﻿The dot prodection in inter-routing should be changed to headjunction rather than the current location of the vechile. and each time the vechile changed the road segment needs to send the heading junction.
+when the vechile has poacket and wanted to switch the road segment it should check the queue vechile for the junction.
+
+we should consider three routing: 
+                        1- inter-routing.
+						2- Intra-routing when the source and the destination are in the same segment.
+						3- The Intra-routing when the source and the destination are in diffrent segme.
+
+Parameters that effects the perforance:
+                       1- threshould for value of priority.
+					   2- the weight of objective function.
+					   3- the com range
+					   4- the RemianDistanceToHeadingJunctionThreshold : public
+					   5-PacketQueueTimerInterval: public
+					   6-IntraRDirectionPar

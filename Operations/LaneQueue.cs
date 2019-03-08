@@ -5,9 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Threading;
-using VANET_SIM.RoadNet.Components;
+using VSIM.Properties;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.Operations
+namespace VSIM.Operations
 {
     /// <summary>
     /// quee to manage the vechiles.
@@ -29,12 +30,15 @@ namespace VANET_SIM.Operations
         /// <param name="veh"></param>
         public void Enqueue(VehicleUi veh)
         {
-            if (!Queue.Contains(veh))
+            veh.Dispatcher.Invoke((Action)delegate
             {
-                Queue.Add(veh);
-                veh.IndexInQueue = Queue.Count;
-                veh.lbl_show_info.Foreground = System.Windows.Media.Brushes.OrangeRed;
-            }
+                if (!Queue.Contains(veh))
+                {
+                    Queue.Add(veh);
+                    veh.IndexInQueue = Queue.Count;
+                    veh.lbl_show_info.Foreground = System.Windows.Media.Brushes.OrangeRed;
+                }
+            });
         }
         /// <summary>
         /// remove the head.
@@ -137,8 +141,9 @@ namespace VANET_SIM.Operations
         /// inputVe should be infront of outVE.
         /// </summary>
         /// <returns></returns>
-        public VehicleUi  GetMyFrontVehicle(VehicleUi Currentvehi) 
+        public VehicleUi GetMyFrontVehicle(VehicleUi Currentvehi)
         {
+
             foreach (VehicleUi fronV in Currentvehi.CurrentLane.LaneVehicleAndQueue.LaneVechilesList)
             {
                 if (fronV != Currentvehi)
@@ -151,10 +156,11 @@ namespace VANET_SIM.Operations
                 }
             }
             return null;
+
         }
 
 
-        
+
         /// <summary>
         /// get the neighbors for the Currentvehi. in the two ways without consider the direction.
         /// </summary>
@@ -162,24 +168,30 @@ namespace VANET_SIM.Operations
         /// <returns></returns>
         public void GetIntraNeighborsTwoWays(VehicleUi Currentvehi)
         {
-            Currentvehi.Intra_Neighbores.Clear();
-            List<VehicleUi> allInSameDirection = new List<RoadNet.Components.VehicleUi>();
-            foreach (LaneUi lane in Currentvehi.CurrentLane.MyRoadSegment.Lanes)
+            if (Currentvehi != null)
             {
-                allInSameDirection.AddRange(lane.LaneVehicleAndQueue.LaneVechilesList);
-            }
+                Currentvehi.Dispatcher.Invoke((Action)delegate
+               {
+                   Currentvehi.Intra_Neighbores.Clear();
+                   List<VehicleUi> allInSameDirection = new List<RoadNet.Components.VehicleUi>();
+                   foreach (LaneUi lane in Currentvehi.CurrentLane.MyRoadSegment.Lanes)
+                   {
+                       allInSameDirection.AddRange(lane.LaneVehicleAndQueue.LaneVechilesList);
+                   }
 
-            foreach (VehicleUi Intra_vehicle in allInSameDirection)
-            {
-                // neighbore should be infront of mine and in the same direction and within my range.
-                if (Intra_vehicle != Currentvehi)
-                {
-                    double dis = Computations.Distance(Intra_vehicle.InstanceLocation, Currentvehi.InstanceLocation);
-                    if (dis < PublicParamerters.CommunicationRaduis)
-                    {
-                        Currentvehi.Intra_Neighbores.Add(Intra_vehicle);
-                    }
-                }
+                   foreach (VehicleUi Intra_vehicle in allInSameDirection)
+                   {
+                   // neighbore should be infront of mine and in the same direction and within my range.
+                   if (Intra_vehicle != Currentvehi)
+                       {
+                           double dis = Computations.Distance(Intra_vehicle.InstanceLocation, Currentvehi.InstanceLocation);
+                           if (dis < Settings.Default.CommunicationRange)
+                           {
+                               Currentvehi.Intra_Neighbores.Add(Intra_vehicle);
+                           }
+                       }
+                   }
+               });
             }
         }
 
@@ -190,30 +202,33 @@ namespace VANET_SIM.Operations
         /// <returns></returns>
         public void GetIntraNeighborOneWayInfront(VehicleUi Currentvehi)
         {
-            Currentvehi.Intra_Neighbores.Clear();
-            List<VehicleUi> allInSameDirection = new List<RoadNet.Components.VehicleUi>();
-            foreach (LaneUi lane in Currentvehi.CurrentLane.MyRoadSegment.Lanes)
+            Currentvehi.Dispatcher.Invoke((Action)delegate
             {
-                if (Currentvehi.VehicleDirection == lane.LaneDirection)
+                Currentvehi.Intra_Neighbores.Clear();
+                List<VehicleUi> allInSameDirection = new List<RoadNet.Components.VehicleUi>();
+                foreach (LaneUi lane in Currentvehi.CurrentLane.MyRoadSegment.Lanes)
                 {
-                    allInSameDirection.AddRange(lane.LaneVehicleAndQueue.LaneVechilesList);
-                }
-            }
-
-            foreach (VehicleUi fronV in allInSameDirection)
-            {
-                if (fronV != Currentvehi)
-                {
-                    double traveledDiffrence = fronV.TravelledDistanceInMeter - Currentvehi.TravelledDistanceInMeter;
-                    if (traveledDiffrence < PublicParamerters.CommunicationRaduis)
+                    if (Currentvehi.VehicleDirection == lane.LaneDirection)
                     {
-                        if ((traveledDiffrence > 0) && (traveledDiffrence <= (Currentvehi.Height * 2))) // increase the distance between the vechiles when line up.
+                        allInSameDirection.AddRange(lane.LaneVehicleAndQueue.LaneVechilesList);
+                    }
+                }
+
+                foreach (VehicleUi fronV in allInSameDirection)
+                {
+                    if (fronV != Currentvehi)
+                    {
+                        double traveledDiffrence = fronV.TravelledDistanceInMeter - Currentvehi.TravelledDistanceInMeter;
+                        if (traveledDiffrence < Settings.Default.CommunicationRange)
                         {
-                            Currentvehi.Intra_Neighbores.Add(fronV);
+                            if ((traveledDiffrence > 0) && (traveledDiffrence <= (Currentvehi.Height * 2))) // increase the distance between the vechiles when line up.
+                            {
+                                Currentvehi.Intra_Neighbores.Add(fronV);
+                            }
                         }
                     }
                 }
-            }
+            });
         }
 
         /// <summary>
@@ -225,35 +240,39 @@ namespace VANET_SIM.Operations
         /// <returns>the inter_nei for vehicle</returns>
         public void GetInterNeighbors(VehicleUi vehicle, Direction Packetdirection, RoadSegment selectedNextRoadSegment)
         {
-            vehicle.Inter_Neighbores.Clear();
-            List<VehicleUi> allInSameDirection = new List<RoadNet.Components.VehicleUi>();
-            foreach (LaneUi lane in selectedNextRoadSegment.Lanes)
+            vehicle.Dispatcher.Invoke((Action)delegate
             {
-               if (lane.LaneDirection == Packetdirection)
+
+                vehicle.Inter_Neighbores.Clear();
+                List<VehicleUi> allInSameDirection = new List<RoadNet.Components.VehicleUi>();
+                foreach (LaneUi lane in selectedNextRoadSegment.Lanes)
                 {
-                    allInSameDirection.AddRange(lane.LaneVehicleAndQueue.LaneVechilesList);
+                    if (lane.LaneDirection == Packetdirection)
+                    {
+                        allInSameDirection.AddRange(lane.LaneVehicleAndQueue.LaneVechilesList);
+                    }
                 }
-            }
 
-            int vid = vehicle.VID;
-            int rid = selectedNextRoadSegment.RID;
+                int vid = vehicle.VID;
+                int rid = selectedNextRoadSegment.RID;
 
-            List<VehicleUi> neibore = new List<RoadNet.Components.VehicleUi>();
-            foreach (VehicleUi Inter_vehicle in allInSameDirection)
-            {
-                
-                double dis = Computations.Distance(vehicle.InstanceLocation, Inter_vehicle.InstanceLocation);
-                if (dis < PublicParamerters.CommunicationRaduis)
+                List<VehicleUi> neibore = new List<RoadNet.Components.VehicleUi>();
+                foreach (VehicleUi Inter_vehicle in allInSameDirection)
                 {
-                    vehicle.Inter_Neighbores.Add(Inter_vehicle);
-                    int v_id = Inter_vehicle.VID;
+
+                    double dis = Computations.Distance(vehicle.InstanceLocation, Inter_vehicle.InstanceLocation);
+                    if (dis < Settings.Default.CommunicationRange)
+                    {
+                        vehicle.Inter_Neighbores.Add(Inter_vehicle);
+                        int v_id = Inter_vehicle.VID;
+                    }
                 }
-            }
 
-               // consider the vhicles which are in the front of me and in the same direction too.
-               GetIntraNeighborOneWayInfront(vehicle);
-               vehicle.Inter_Neighbores.AddRange(vehicle.Intra_Neighbores);
+                // consider the vhicles which are in the front of me and in the same direction too.
+                GetIntraNeighborOneWayInfront(vehicle);
+                vehicle.Inter_Neighbores.AddRange(vehicle.Intra_Neighbores);
 
+            });
         }
 
 

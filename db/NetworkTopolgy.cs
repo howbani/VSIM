@@ -4,9 +4,10 @@ using System.Data;
 using System.Data.OleDb;
 using System.IO;
 using System.Windows;
-using VANET_SIM.RoadNet.Components;
+using System.Windows.Controls;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.db
+namespace VSIM.db
 {
 
     public class NetworkTopolgy
@@ -34,30 +35,64 @@ namespace VANET_SIM.db
         public bool SaveVanetComponent(VanetComonent vantComp, string TopologName)
         {
             string pathString = dbSettings.PathString + TopologName + ".txt";
-            string[] cols = new string[]
+            string line = "";
+            string[] cols;
+            string[] vals;
+
+            if (vantComp.ComponentType == ComponentType.RoadSegment)
             {
+                cols = new string[]
+               {
                     "Pox",
                     "Poy",
                     "Width",
                     "Height",
                     "ComponentType",
                     "RoadOrientation",
+                    "LanesCount"
 
-            };
-            string[] vals = new string[]
-            {
-                
+               };
+                vals = new string[]
+               {
+
                 vantComp.Pox.ToString(),
                 vantComp.Poy.ToString(),
                 vantComp.Width.ToString(),
                 vantComp.Height.ToString(),
                 vantComp.ComponentType.ToString(),
-                vantComp.RoadOrientation.ToString()
-            };
-            string line = "";
-            for (int i = 0; i < cols.Length; i++)
+                vantComp.RoadOrientation.ToString(),
+                vantComp.LanesCount.ToString()
+               };
+
+                for (int i = 0; i < cols.Length; i++)
+                {
+                    line += cols[i] + "=" + vals[i] + ";";
+                }
+            }
+            else if(vantComp.ComponentType== ComponentType.Junction)
             {
-                line += cols[i] + "=" + vals[i] + ";";
+                cols = new string[]
+              {
+                    "Pox",
+                    "Poy",
+                    "Width",
+                    "Height",
+                    "ComponentType",
+              };
+                vals = new string[]
+               {
+
+                vantComp.Pox.ToString(),
+                vantComp.Poy.ToString(),
+                vantComp.Width.ToString(),
+                vantComp.Height.ToString(),
+                vantComp.ComponentType.ToString(),
+               };
+
+                for (int i = 0; i < cols.Length; i++)
+                {
+                    line += cols[i] + "=" + vals[i] + ";";
+                }
             }
 
             FileStream fs1 = new FileStream(pathString, FileMode.Append, FileAccess.Write);
@@ -91,7 +126,40 @@ namespace VANET_SIM.db
             return networks;
         }
 
+        /// <summary>
+        ///  GET THE NAME OF NETWORKS
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> ImportNetworkNames()
+        {
+            List<string> NAMES = new List<string>();
+            DirectoryInfo d = new DirectoryInfo(dbSettings.PathString);//Assuming Test is your Folder
+            FileInfo[] Files = d.GetFiles("*.txt"); //Getting Text files
+            foreach (FileInfo file in Files)
+            {
+                NAMES.Add(file.Name);
+            }
+            return NAMES;
+        }
 
+
+        public static void ImportNetworkNames(ComboBox comboBox)
+        {
+            
+            DirectoryInfo d = new DirectoryInfo(dbSettings.PathString);//Assuming Test is your Folder
+            FileInfo[] Files = d.GetFiles("*.txt"); //Getting Text files
+            foreach (FileInfo file in Files)
+            {
+                ComboBoxItem comItem = new ComboBoxItem() { Content = file.Name };
+                comboBox.Items.Add(comItem);
+            }
+        }
+
+        /// <summary>
+        /// "0Pox","1Poy", "2Width", "3Height","4ComponentType",  "5RoadOrientation", "6LanesCount"
+        /// </summary>
+        /// <param name="line"></param>
+        /// <returns></returns>
         public static VanetComonent GetVanetComonent(string line)
         {
             try
@@ -101,21 +169,26 @@ namespace VANET_SIM.db
                 re.Pox = Convert.ToDouble(linecom[0].Split('=')[1]);
                 re.Poy = Convert.ToDouble(linecom[1].Split('=')[1]);
                 re.Width = Convert.ToDouble(linecom[2].Split('=')[1]);
-                re.Height = Convert.ToDouble(linecom[3].Split('=')[1]);
+                re.Height = Convert.ToDouble(linecom[3].Split('=')[1]); //
                
-                if (linecom[4].Split('=')[1] == "RoadSegment")
+                if (linecom[4].Split('=')[1] == "RoadSegment") // TYPE.
                 {
                     re.ComponentType = ComponentType.RoadSegment;
                     if (linecom[5].Split('=')[1] == "Vertical")
                     {
                         re.RoadOrientation = RoadOrientation.Vertical;
                     }
-                    else re.RoadOrientation = RoadOrientation.Horizontal;
+                    else
+                    {
+                        re.RoadOrientation = RoadOrientation.Horizontal;
+                    }
+                    re.LanesCount = Convert.ToInt16(linecom[6].Split('=')[1]);
                 }
                 else
                 {
                     re.ComponentType = ComponentType.Junction;
                 }
+                //LanesCount
 
 
                 return re;
@@ -128,10 +201,10 @@ namespace VANET_SIM.db
             return null; ;
         }
 
-        public static List<VanetComonent> ImportNetwok(NetwokImport Netwok)
+
+        public static List<VanetComonent> ImportNetwok(string netName)
         {
-            List<VanetComonent> re = new List<db.VanetComonent>();
-            string netName = Netwok.lbl_network_name.Content.ToString();
+            List<VanetComonent> re = new List<VanetComonent>();
             string pathString = dbSettings.PathString + netName;
 
             string[] lines = File.ReadAllLines(pathString);

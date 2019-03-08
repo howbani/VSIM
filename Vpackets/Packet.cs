@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using VANET_SIM.Operations;
-using VANET_SIM.RoadNet.Components;
+using VSIM.Operations;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.Vpackets
+namespace VSIM.Vpackets
 {
     public enum PacketType {Data,Beacon }
     public class Packet
@@ -19,18 +19,40 @@ namespace VANET_SIM.Vpackets
         public bool isDelivered { get; set; }
         public int SRID { get; set; } // raod segment ID
 
-        public double QueuingDelayInSecond => QueuingDelayStopWatch.Elapsed.TotalSeconds;
+        public double CommunicationOverhead { get; set; } 
 
+
+        /// <summary>
+        ///  the number of waitingtimes *PacketQueueRetryTimerInterval
+        /// </summary>
+        public double QueuingDelayInSecond
+        {
+            get
+            {
+                // 0.1 for proccesing the packet.
+                return (PublicParamerters.PacketQueueRetryTimerInterval) * PathWaitingTimes;
+            }
+        }
+
+        /// <summary>
+        /// the PropagationAndTransmissionDelay for thw packet along the whole path.
+        /// </summary>
         public double PropagationAndTransmissionDelay
         {
             get;set;
         }
-        public double DelayInSeconds => QueuingDelayInSecond + PropagationAndTransmissionDelay;
-        public int TotalWaitingTimes { get; set; } // Per the whole path. 
-        public int Hops_V { get; set; }
-        public double WaitingThreshold => TotalWaitingTimes / Hops_V;
+
+        /// <summary>
+        ///  QueuingDelayInSecond + PropagationAndTransmissionDelay;
+        /// </summary>
+        public double TotalDelayInSeconds => QueuingDelayInSecond + PropagationAndTransmissionDelay;
+
+        public int PathWaitingTimes { get; set; } // the number that the packet stored in the buffer in the whol path
+        public int HopWaitingTimes { get; set; } // one hop. this indicate the number of waiting-times in the vechile.
+        public int HopsVehicles { get; set; }
+      //  public double WaitingThreshold => PathWaitingTimes / Hops_V;
         public string VehiclesString { get; set; }
-        public int Hops_J { get; set; }
+        public int HopsJunctions { get; set; }
 
         public double EuclideanDistance { get; set; }
         public double RoutingDistance { get; set; }  // 
@@ -62,6 +84,6 @@ namespace VANET_SIM.Vpackets
         public VehicleUi SourceVehicle { get; set; }
         public VehicleUi DestinationVehicle { get; set; }
 
-        public Stopwatch QueuingDelayStopWatch = new Stopwatch();
+        //public Stopwatch QueuingDelayStopWatch = new Stopwatch();
     }
 }

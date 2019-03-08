@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace VANET_SIM.RoadNet.Components
+namespace VSIM.RoadNet.Components
 {
     public enum RoadOrientation { None, Vertical, Horizontal }
     public enum ComponentType { None, RoadSegment, Junction }

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace VANET_SIM.Properties {
+namespace VSIM.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -49,7 +49,7 @@ namespace VANET_SIM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("120")]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
         public int MaxNumberOfVehicles {
             get {
                 return ((int)(this["MaxNumberOfVehicles"]));
@@ -61,19 +61,19 @@ namespace VANET_SIM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.3")]
-        public double WeightConn {
+        [global::System.Configuration.DefaultSettingValueAttribute("0.4")]
+        public double WeightConnectivity {
             get {
-                return ((double)(this["WeightConn"]));
+                return ((double)(this["WeightConnectivity"]));
             }
             set {
-                this["WeightConn"] = value;
+                this["WeightConnectivity"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.7")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.6")]
         public double WeightShortestDistance {
             get {
                 return ((double)(this["WeightShortestDistance"]));
@@ -85,25 +85,217 @@ namespace VANET_SIM.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0.1")]
-        public double IntraRDirectionPar {
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public double IntraVehiForwardDirectionPar {
             get {
-                return ((double)(this["IntraRDirectionPar"]));
+                return ((double)(this["IntraVehiForwardDirectionPar"]));
             }
             set {
-                this["IntraRDirectionPar"] = value;
+                this["IntraVehiForwardDirectionPar"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("\"a\"")]
-        public string Ammar {
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public double CommunicationRange {
             get {
-                return ((string)(this["Ammar"]));
+                return ((double)(this["CommunicationRange"]));
             }
             set {
-                this["Ammar"] = value;
+                this["CommunicationRange"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public double MaxSpeed {
+            get {
+                return ((double)(this["MaxSpeed"]));
+            }
+            set {
+                this["MaxSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("30")]
+        public double MinSpeed {
+            get {
+                return ((double)(this["MinSpeed"]));
+            }
+            set {
+                this["MinSpeed"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("100")]
+        public int NumberofPackets {
+            get {
+                return ((int)(this["NumberofPackets"]));
+            }
+            set {
+                this["NumberofPackets"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Rows_net_top {
+            get {
+                return ((int)(this["Rows_net_top"]));
+            }
+            set {
+                this["Rows_net_top"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Cols_net_top {
+            get {
+                return ((int)(this["Cols_net_top"]));
+            }
+            set {
+                this["Cols_net_top"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double HorizontalLength {
+            get {
+                return ((double)(this["HorizontalLength"]));
+            }
+            set {
+                this["HorizontalLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double VerticalLength {
+            get {
+                return ((double)(this["VerticalLength"]));
+            }
+            set {
+                this["VerticalLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int LaneCount_top_gen {
+            get {
+                return ((int)(this["LaneCount_top_gen"]));
+            }
+            set {
+                this["LaneCount_top_gen"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double SliderValue {
+            get {
+                return ((double)(this["SliderValue"]));
+            }
+            set {
+                this["SliderValue"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("7")]
+        public int MaximumAttemps {
+            get {
+                return ((int)(this["MaximumAttemps"]));
+            }
+            set {
+                this["MaximumAttemps"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public double MaxStoreTime {
+            get {
+                return ((double)(this["MaxStoreTime"]));
+            }
+            set {
+                this["MaxStoreTime"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("None")]
+        public string NetTopName {
+            get {
+                return ((string)(this["NetTopName"]));
+            }
+            set {
+                this["NetTopName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public double TraficSignalingTimerInterval {
+            get {
+                return ((double)(this["TraficSignalingTimerInterval"]));
+            }
+            set {
+                this["TraficSignalingTimerInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DistanceImportance {
+            get {
+                return ((bool)(this["DistanceImportance"]));
+            }
+            set {
+                this["DistanceImportance"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double DistanceBetweenSourceAndDestination {
+            get {
+                return ((double)(this["DistanceBetweenSourceAndDestination"]));
+            }
+            set {
+                this["DistanceBetweenSourceAndDestination"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public double IntraVehiBackwardDirectionPar {
+            get {
+                return ((double)(this["IntraVehiBackwardDirectionPar"]));
+            }
+            set {
+                this["IntraVehiBackwardDirectionPar"] = value;
             }
         }
     }

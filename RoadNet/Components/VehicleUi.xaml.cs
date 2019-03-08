@@ -13,12 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using VANET_SIM.Operations;
-using VANET_SIM.Routing;
-using VANET_SIM.Vpackets;
+using VSIM.Operations;
+using VSIM.Properties;
+using VSIM.Routing;
+using VSIM.Vpackets;
 using static RandomColorsGenerator;
 
-namespace VANET_SIM.RoadNet.Components
+namespace VSIM.RoadNet.Components
 {
     public enum NotationsSign { HasNoPacket, HasPacket, Destination, Default }
     /// <summary>
@@ -75,63 +76,66 @@ namespace VANET_SIM.RoadNet.Components
         /// <param name="sign"></param>
         public void SetNotationSign(NotationsSign sign)
         {
-            // packet in the queue
-            if (sign == NotationsSign.HasPacket)
-            {
-                if (PacketQueue.Count >= 1)
-                {
-                    //grid_notation.Background = Brushes.Red;
-                    Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Red), DispatcherPriority.Input);
-                }
-                else
-                {
-                    Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Transparent), DispatcherPriority.Input);
-                }
-            } // no packt in the queu
-            else if (sign == NotationsSign.HasNoPacket)
-            {
-                if (PacketQueue.Count == 0)
-                {
-                    //  grid_notation.Background = Brushes.Transparent;
-                    Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Transparent), DispatcherPriority.Input);
-                }
-                else
-                {
-                    Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Red), DispatcherPriority.Input);
-                }
-            } // the source
-            else if (sign == NotationsSign.Destination)
-            {
-                if (WaitingPacketsIDsList.Count > 0)
-                {
-                    Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.DarkOrange), DispatcherPriority.Input);
-                }
-                else
-                {
-                    Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.Yellow), DispatcherPriority.Input);
-                }
-            } // the defualt. 
-            else if (sign == NotationsSign.Default)
-            {
-                if (WaitingPacketsIDsList.Count > 0)
-                {
-                    Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.DarkOrange), DispatcherPriority.Input);
-                }
-                else
-                {
-                    Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.Yellow), DispatcherPriority.Input);
-                }
+            Dispatcher.BeginInvoke((Action)delegate
+          {
+                // packet in the queue
+                if (sign == NotationsSign.HasPacket)
+              {
+                  if (PacketQueue.Count >= 1)
+                  {
+                        //grid_notation.Background = Brushes.Red;
+                        Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Red), DispatcherPriority.Input);
+                  }
+                  else
+                  {
+                      Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Transparent), DispatcherPriority.Input);
+                  }
+              } // no packt in the queu
+                else if (sign == NotationsSign.HasNoPacket)
+              {
+                  if (PacketQueue.Count == 0)
+                  {
+                        //  grid_notation.Background = Brushes.Transparent;
+                        Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Transparent), DispatcherPriority.Input);
+                  }
+                  else
+                  {
+                      Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Red), DispatcherPriority.Input);
+                  }
+              } // the source
+                else if (sign == NotationsSign.Destination)
+              {
+                  if (WaitingPacketsIDsList.Count > 0)
+                  {
+                      Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.DarkOrange), DispatcherPriority.Input);
+                  }
+                  else
+                  {
+                      Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.Yellow), DispatcherPriority.Input);
+                  }
+              } // the defualt. 
+                else if (sign == NotationsSign.Default)
+              {
+                  if (WaitingPacketsIDsList.Count > 0)
+                  {
+                      Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.DarkOrange), DispatcherPriority.Input);
+                  }
+                  else
+                  {
+                      Dispatcher.Invoke(new Action(() => txt_vehicle.Foreground = Brushes.Yellow), DispatcherPriority.Input);
+                  }
 
-                if (PacketQueue.Count == 0)
-                {
-                    //  grid_notation.Background = Brushes.Transparent;
-                    Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Transparent), DispatcherPriority.Input);
-                }
-                else
-                {
-                    Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Red), DispatcherPriority.Input);
-                }
-            }
+                  if (PacketQueue.Count == 0)
+                  {
+                        //  grid_notation.Background = Brushes.Transparent;
+                        Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Transparent), DispatcherPriority.Input);
+                  }
+                  else
+                  {
+                      Dispatcher.Invoke(new Action(() => grid_notation.Background = Brushes.Red), DispatcherPriority.Input);
+                  }
+              }
+          });
         }
 
 
@@ -172,86 +176,84 @@ namespace VANET_SIM.RoadNet.Components
         public enum Vehicleinfo { SpeedKMH, SwitchDirection, Direction, VID, None, SpeedTimer, RID, SJID, DJID, LaneIndex, InstanceLocation, RemianDistanceToHeadingJunction, TravelledDistanceInMeter, ExceededDistanceInMeter, PacketsQueueLength, JunctionQueueIndex, RIDpluseLaneIndex }
         public void showInfo(Vehicleinfo vinfo)
         {
+            Dispatcher.Invoke((Action)delegate
+           {
+               if (vinfo == Vehicleinfo.None)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = ""), DispatcherPriority.Send);
+               }
+               if (vinfo == Vehicleinfo.SwitchDirection)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.CurrentSwitchToDirection), DispatcherPriority.Send);
+               }
+               if (vinfo == Vehicleinfo.Direction)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.LaneDirection), DispatcherPriority.Send);
+               }
 
-            if (vinfo == Vehicleinfo.None)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = ""), DispatcherPriority.Send);
-            }
-            if (vinfo == Vehicleinfo.SwitchDirection)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.CurrentSwitchToDirection), DispatcherPriority.Send);
-            }
-            if (vinfo == Vehicleinfo.Direction)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.LaneDirection), DispatcherPriority.Send);
-            }
+               if (vinfo == Vehicleinfo.VID)
+               {
+                   txt_vid.Visibility = Visibility.Hidden;
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = VID), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.SpeedKMH)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = GetSpeedInKMH.ToString("0.00")), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.SpeedTimer)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = InstantaneousSpeed.ToString("0.00")), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.RID)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.MyRoadSegment.RID), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.SJID)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = StartJunction.JID), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.DJID)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = EndJunction.JID), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.LaneIndex)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.LaneIndex), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.InstanceLocation)
+               {
+                   int X = Convert.ToInt32(InstanceLocation.X);
+                   int Y = Convert.ToInt32(InstanceLocation.Y);
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = X + "," + Y), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.RemianDistanceToHeadingJunction)
+               {
 
-            if (vinfo == Vehicleinfo.VID)
-            {
-                txt_vid.Visibility = Visibility.Hidden;
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = VID), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.SpeedKMH)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = GetSpeedInKMH.ToString("0.00")), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.SpeedTimer)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = InstantaneousSpeed.ToString("0.00")), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.RID)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.MyRoadSegment.RID), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.SJID)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = StartJunction.JID), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.DJID)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = EndJunction.JID), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.LaneIndex)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.LaneIndex), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.InstanceLocation)
-            {
-                int X = Convert.ToInt32(InstanceLocation.X);
-                int Y = Convert.ToInt32(InstanceLocation.Y);
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = X + "," + Y), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.RemianDistanceToHeadingJunction)
-            {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = RemianDistanceToHeadingJunction.ToString("0.00")), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.TravelledDistanceInMeter)
+               {
 
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = RemianDistanceToHeadingJunction.ToString("0.00")), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.TravelledDistanceInMeter)
-            {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = TravelledDistanceInMeter.ToString("0.00")), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.ExceededDistanceInMeter)
+               {
 
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = TravelledDistanceInMeter.ToString("0.00")), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.ExceededDistanceInMeter)
-            {
-
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = ExceededDistanceInMeter.ToString("0.00")), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.PacketsQueueLength)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = PacketQueue.Count), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.JunctionQueueIndex)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = IndexInQueue), DispatcherPriority.Send);
-            }
-            else if (vinfo == Vehicleinfo.RIDpluseLaneIndex)
-            {
-                Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.MyRoadSegment.RID + "-" + CurrentLane.LaneIndex), DispatcherPriority.Send);
-            }
-
-
-
-
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = ExceededDistanceInMeter.ToString("0.00")), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.PacketsQueueLength)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = PacketQueue.Count), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.JunctionQueueIndex)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = IndexInQueue), DispatcherPriority.Send);
+               }
+               else if (vinfo == Vehicleinfo.RIDpluseLaneIndex)
+               {
+                   Dispatcher.Invoke(new Action(() => lbl_show_info.Content = CurrentLane.MyRoadSegment.RID + "-" + CurrentLane.LaneIndex), DispatcherPriority.Send);
+               }
+           });
         }
 
         #endregion
@@ -277,8 +279,6 @@ namespace VANET_SIM.RoadNet.Components
             {
                 CandidateJunction cand = re.CandidateJunction(packet.HeadingJunction, packet.DestinationJunction); // the i=HeadingJunction. we would like to select the next junction
 
-                //  Console.WriteLine("S JID " + packet.SourceJunction.JID + " D JID" + packet.DestinationJunction.JID);
-                //   Console.WriteLine("C JID " + packet.HeadingJunction.JID);
                 if (cand != null)
                 {
                     // get the dpacket direction:
@@ -287,7 +287,7 @@ namespace VANET_SIM.RoadNet.Components
                     {
                         // the first lane is head to EndJunction.
                         if (rs.Lanes[0].GetMyHeadingJunction == EndJunction)
-                            packet.Direction = rs.Lanes[(int)PublicParamerters.NumberOfLanes - 1].LaneDirection;
+                            packet.Direction = rs.Lanes[rs.LanesCount - 1].LaneDirection;
                         else
                             packet.Direction = rs.Lanes[0].LaneDirection;
 
@@ -296,15 +296,13 @@ namespace VANET_SIM.RoadNet.Components
                     {
                         // horizontale:
                         if (rs.Lanes[0].GetMyHeadingJunction == EndJunction)
-                            packet.Direction = rs.Lanes[(int)PublicParamerters.NumberOfLanes - 1].LaneDirection;
+                            packet.Direction = rs.Lanes[rs.LanesCount - 1].LaneDirection;
                         else
                             packet.Direction = rs.Lanes[0].LaneDirection;
                     }
 
                     // set the segment:
                     packet.CurrentRoadSegment = rs;
-                    //  packet.CurrentRoadSegment.MyYellowLine.border_yellow_line.Background = Brushes.OrangeRed;
-                    //     Console.WriteLine("Inter-Routing(MatchJunction) RID " + rs.RID + " has been selected as new Road Segment ");
                     return rs;
                 }
             }
@@ -315,7 +313,7 @@ namespace VANET_SIM.RoadNet.Components
                 {
                     // the first lane is head to EndJunction.
                     if (rs.Lanes[0].GetMyHeadingJunction == EndJunction)
-                        packet.Direction = rs.Lanes[(int)PublicParamerters.NumberOfLanes - 1].LaneDirection;
+                        packet.Direction = rs.Lanes[rs.LanesCount - 1].LaneDirection;
                     else
                         packet.Direction = rs.Lanes[0].LaneDirection;
 
@@ -324,7 +322,7 @@ namespace VANET_SIM.RoadNet.Components
                 {
                     // horizontale:
                     if (rs.Lanes[0].GetMyHeadingJunction == EndJunction)
-                        packet.Direction = rs.Lanes[(int)PublicParamerters.NumberOfLanes - 1].LaneDirection;
+                        packet.Direction = rs.Lanes[rs.LanesCount - 1].LaneDirection;
                     else
                         packet.Direction = rs.Lanes[0].LaneDirection;
                 }
@@ -349,11 +347,12 @@ namespace VANET_SIM.RoadNet.Components
             if (can != null)
             {
                 VehicleUi next = can.SelectedVehicle;
-                if (packet.Hops_V > 3)
+                if (packet.HopsVehicles > 3)
                 {
-                    int lastMinuse1 = Convert.ToInt16(packet.VehiclesString.Split('-')[packet.Hops_V-1]);
+                    int lastMinuse1 = Convert.ToInt16(packet.VehiclesString.Split('-')[packet.HopsVehicles-1]);
                     if (next.VID != lastMinuse1)
                     {
+                        packet.CommunicationOverhead += (candidateVe.Count - 1); // / (CurrentLane.MyRoadSegment.LanesCount / 2); // divided tha lane in the same direction.
                         return next;
                     }
                     else
@@ -374,18 +373,24 @@ namespace VANET_SIM.RoadNet.Components
         /// </summary>
         public void RandomDestinationVehicle()
         {
-            int max = CurrentLane._MainWindow.MyVehicles.Count;
-            if (max >= 2)
-            {
-                int rand = Convert.ToInt16(RandomeNumberGenerator.GetUniform(max - 1));
-                if (rand != VID)
-                {
-                    VehicleUi DestinationVehicle = CurrentLane._MainWindow.MyVehicles[rand];
-                    GeneratePacket(DestinationVehicle);
+            Dispatcher.Invoke((Action)delegate
+           {
+               int max = CurrentLane._MainWindow.MyVehicles.Count;
+               if (max >= 2)
+               {
+                   int rand = Convert.ToInt16(RandomeNumberGenerator.GetUniform(max - 1));
+                   if (rand != VID)
+                   {
+                       VehicleUi DestinationVehicle = CurrentLane._MainWindow.MyVehicles[rand];
 
-                }
-            }
+                       GeneratePacket(DestinationVehicle);
+
+                   }
+               }
+           });
         }
+
+      
 
         /// <summary>
         /// when the queue is
@@ -394,25 +399,27 @@ namespace VANET_SIM.RoadNet.Components
         /// <param name="e"></param>
         private void PacketQueueTimer_Tick(object sender, EventArgs e)
         {
-            // take the top one and send the packet.
-            Packet pack = PacketQueue.Peek();
-            if (pack != null)
+            Dispatcher.Invoke((Action)delegate
             {
-                // has packet.
-                PacketQueue.Dequeue(); // remove the packet from the queue.
-                Send(pack); // try to send it. if re-sent more than 7 times then it should be removed.
-                if (PacketQueue.Count == 0)
+                // take the top one and send the packet.
+                Packet pack = PacketQueue.Peek();
+                if (pack != null)
                 {
-                    // has no packet in the queue.
-                    PacketQueueTimer.Stop();
-                    SetNotationSign(NotationsSign.HasNoPacket);
+                    // has packet.
+                    PacketQueue.Dequeue(); // remove the packet from the queue.
+                    SendPacket(pack); // try to send it. if re-sent more than 7 times then it should be removed.
+                    if (PacketQueue.Count == 0)
+                    {
+                        // has no packet in the queue.
+                        PacketQueueTimer.Stop();
+                        SetNotationSign(NotationsSign.HasNoPacket);
+                    }
+                    else
+                    {
+                        SetNotationSign(NotationsSign.HasPacket);
+                    }
                 }
-                else
-                {
-                    SetNotationSign(NotationsSign.HasPacket);
-                }
-                
-            }
+            });
         }
 
         /// <summary>
@@ -421,41 +428,38 @@ namespace VANET_SIM.RoadNet.Components
         /// <param name="DestinationVehicle"></param>
         public void GeneratePacket(VehicleUi DestinationVehicle)
         {
-            Packet packet = new Packet();
+            Dispatcher.Invoke((Action)delegate
+            {
+                Packet packet = new Packet();
 
-            packet.Type = PacketType.Data;
-            PublicStatistics.GneratedPacketsCount += 1;
-            packet.PID = PublicStatistics.GneratedPacketsCount;
-            packet.PacketLength = PublicParamerters.DataPacketLength;
+                packet.Type = PacketType.Data;
+                PublicStatistics.GeneratedPacketsCount += 1;
+                packet.PID = PublicStatistics.GeneratedPacketsCount;
+                packet.PacketLength = PublicParamerters.DataPacketLength;
 
-            packet.TravelledRoadSegmentString += CurrentLane.MyRoadSegment.RID; // add the first rs.
-            packet.VehiclesString += VID; // start by current sender.
-            packet.SRID = CurrentLane.MyRoadSegment.RID;
-            // set source and distination:
-            packet.SourceVehicle = this;
-            packet.DestinationVehicle = DestinationVehicle;
-            packet.Direction = DestinationVehicle.CurrentLane.LaneDirection;
-            packet.CurrentRoadSegment = CurrentLane.MyRoadSegment; // the segment of the vechile.
+                packet.TravelledRoadSegmentString += CurrentLane.MyRoadSegment.RID; // add the first rs.
+                packet.VehiclesString += VID; // start by current sender.
+                packet.SRID = CurrentLane.MyRoadSegment.RID;
+                // set source and distination:
+                packet.SourceVehicle = this;
+                packet.DestinationVehicle = DestinationVehicle;
+                packet.Direction = DestinationVehicle.CurrentLane.LaneDirection;
+                packet.CurrentRoadSegment = CurrentLane.MyRoadSegment; // the segment of the vechile.
 
-            packet.EuclideanDistance = Computations.Distance(InstanceLocation, DestinationVehicle.InstanceLocation); // the intial distance 
-            packet.RoutingDistance = packet.EuclideanDistance;
-            packet.SVID = VID;
-            packet.DVID = DestinationVehicle.VID;
-            // Console.WriteLine("VID " + VID + "generates PID " + packet.PID + " to be sent to VID " + DestinationVehicle.VID);
+                packet.EuclideanDistance = Computations.Distance(InstanceLocation, DestinationVehicle.InstanceLocation); // the intial distance 
+                packet.RoutingDistance = packet.EuclideanDistance;
+                packet.SVID = VID;
+                packet.DVID = DestinationVehicle.VID;
 
-            //:
-            // packet.CurrentRoadSegment.MyYellowLine.border_yellow_line.Background = Brushes.Green; //source
-            //  packet.DestinationRoadSegment.MyYellowLine.border_yellow_line.Background = Brushes.Black; // dist
+                this.SetNotationSign(NotationsSign.HasPacket);
+                DestinationVehicle.SetNotationSign(NotationsSign.Destination);
+                DestinationVehicle.WaitingPacketsIDsList.Add(packet.PID); // flage 
 
-            this.SetNotationSign(NotationsSign.HasPacket);
-            DestinationVehicle.SetNotationSign(NotationsSign.Destination);
-            DestinationVehicle.WaitingPacketsIDsList.Add(packet.PID); // flage 
-
-            // start count the delay.
-            PacketQueue.Enqueue(packet); // add the packet to the queue.
-            packet.QueuingDelayStopWatch.Start(); // start
-            PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
-            PacketQueueTimer.Start(); // start the timer.
+                // start count the delay.
+                PacketQueue.Enqueue(packet); // add the packet to the queue.
+                PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
+                PacketQueueTimer.Start(); // start the timer.
+            });
         }
 
 
@@ -465,123 +469,162 @@ namespace VANET_SIM.RoadNet.Components
         /// send the packet.
         /// </summary>
         /// <param name="packet"></param>
-        public void Send(Packet packet)
+        public void SendPacket(Packet packet)
         {
-            if (packet.Type == PacketType.Data)
+            Dispatcher.Invoke((Action)delegate
             {
-                // it is time to switch the packet from a segment to a new segment.
-                if (RemianDistanceToHeadingJunction <= PublicParamerters.RemianDistanceToHeadingJunctionThreshold)
+                if (packet.Type == PacketType.Data)
                 {
-                    //select the next junction.
-                    RoadSegment selectedNextRoadSegment = MatchJunction(packet);
-                    if (selectedNextRoadSegment != null)
+                    // it is time to switch the packet from a segment to a new segment.
+                    if (RemianDistanceToHeadingJunction <= PublicParamerters.RemianDistanceToHeadingJunctionThreshold)
                     {
-                        // select the vechiles that going to the selected next road segment.
-                        // select inter-neighbors.
-                        CurrentLane.LaneVehicleAndQueue.GetInterNeighbors(this, packet.Direction, selectedNextRoadSegment); // get the inter_neighbors. should be computed before finding the
-                        VehicleUi next = MatchVehicle(Inter_Neighbores, selectedNextRoadSegment, packet); // inter_neibors.
+                        //select the next junction.
+                        RoadSegment selectedNextRoadSegment = MatchJunction(packet);
+                        if (selectedNextRoadSegment != null)
+                        {
+                            // select the vechiles that going to the selected next road segment.
+                            // select inter-neighbors.
+                            CurrentLane.LaneVehicleAndQueue.GetInterNeighbors(this, packet.Direction, selectedNextRoadSegment); // get the inter_neighbors. should be computed before finding the
+                            VehicleUi next = MatchVehicle(Inter_Neighbores, selectedNextRoadSegment, packet); // inter_neibors.
+                            if (next != null)
+                            {
+                                packet.HopsJunctions += 1;
+                                packet.TravelledRoadSegmentString += "-" + selectedNextRoadSegment.RID;
+                                RelayPacket(packet, next);
+                            }
+                            else
+                            {
+                                packet.HopWaitingTimes += 1; // count the hop waiting.
+                                if (packet.HopWaitingTimes <= Settings.Default.MaximumAttemps)
+                                {
+                                    StoreThePacket(packet);
+                                }
+                                else
+                                {
+                                    // drop the packet: 
+                                    DropPacket(packet);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        CurrentLane.LaneVehicleAndQueue.GetIntraNeighborsTwoWays(this); // find the inter_neigbors.
+                        VehicleUi next = MatchVehicle(Intra_Neighbores, CurrentLane.MyRoadSegment, packet); // intra_neighbors.
                         if (next != null)
                         {
-                            packet.QueuingDelayStopWatch.Stop();
-                            PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
-                            packet.PropagationAndTransmissionDelay += DelayModel.Delay(this, next);
-                            packet.Hops_J += 1;
-                            packet.TravelledRoadSegmentString += "-" + selectedNextRoadSegment.RID;
-                            packet.Hops_V += 1;
-                            packet.RoutingDistance += Computations.Distance(InstanceLocation, next.InstanceLocation);
-                            packet.VehiclesString += "-" + next.VID;
-                            next.RecievePacket(packet);
-                            PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
-                            next.SetNotationSign(NotationsSign.HasPacket);
-                            SetNotationSign(NotationsSign.HasNoPacket);
+                            RelayPacket(packet, next);
                         }
                         else
                         {
-                            packet.TotalWaitingTimes += 1;
-                            PacketQueue.Enqueue(packet); // add the packet to the queue.
-                            packet.QueuingDelayStopWatch.Start(); // resume the queue delay counter.
-                            PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueRetryTimerInterval); // retry after...
-                            PacketQueueTimer.Start(); // start the timer.
+                            packet.HopWaitingTimes += 1; // count the hop waiting.
+                            if (packet.HopWaitingTimes <= Settings.Default.MaximumAttemps)
+                            {
+                                StoreThePacket(packet);
+                            }
+                            else
+                            {
+                                // drop the packet: 
+                                DropPacket(packet);
+                            }
                         }
                     }
                 }
                 else
                 {
-                    CurrentLane.LaneVehicleAndQueue.GetIntraNeighborsTwoWays(this); // find the inter_neigbors.
-                    VehicleUi next = MatchVehicle(Intra_Neighbores, CurrentLane.MyRoadSegment, packet); // intra_neighbors.
-                    if (next != null)
-                    {
-                        packet.QueuingDelayStopWatch.Stop();
-                        packet.PropagationAndTransmissionDelay += DelayModel.Delay(this, next);
-                        packet.Hops_V += 1;
-                        packet.RoutingDistance += Computations.Distance(InstanceLocation, next.InstanceLocation);
-                        packet.VehiclesString += "-" + next.VID;
-                        next.RecievePacket(packet);
-                        PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
-                        next.SetNotationSign(NotationsSign.HasPacket);
-                        SetNotationSign(NotationsSign.HasNoPacket);
-                    }
-                    else
-                    {
-                        packet.TotalWaitingTimes += 1;
-                        PacketQueue.Enqueue(packet); // add the packet to the queue.
-                        packet.QueuingDelayStopWatch.Start(); // resume the queue delay counter.
-                        PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueRetryTimerInterval); // retry after...
-                        PacketQueueTimer.Start(); // start the timer.
-                    }
+                    // packet is not data.
                 }
-            }
-            else
+            });
+        }
+
+        /// <summary>
+        /// stor the packet. no forwarder right now. the packet should be storted.
+        /// </summary>
+        public void StoreThePacket(Packet packet)
+        {
+            Dispatcher.Invoke((Action)delegate
             {
-                // packet is not data.
-            }
+                PacketQueue.Enqueue(packet); // add the packet to the queue.
+                PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueRetryTimerInterval); // retry after...
+                PacketQueueTimer.Start(); // start the timer.
+            });
+        }
+
+        /// <summary>
+        /// forward the packet to the NEXT
+        /// </summary>
+        /// <param name="packet"></param>
+        /// <param name="next"></param>
+        public void RelayPacket(Packet packet, VehicleUi next)
+        {
+            Dispatcher.Invoke((Action)delegate
+            {
+                packet.PathWaitingTimes += packet.HopWaitingTimes; // save the path waiting time and clear the hop.
+                packet.HopWaitingTimes = 0; // re-intilize the hop-waiting.
+
+                packet.PropagationAndTransmissionDelay += DelayModel.Delay(this, next);
+                packet.HopsVehicles += 1;
+                packet.RoutingDistance += Computations.Distance(InstanceLocation, next.InstanceLocation);
+                packet.VehiclesString += "-" + next.VID;
+                next.RecievePacket(packet);
+                PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
+                next.SetNotationSign(NotationsSign.HasPacket);
+                SetNotationSign(NotationsSign.HasNoPacket);
+            });
+        }
+
+        public void DropPacket(Packet packet)
+        {
+            Dispatcher.Invoke((Action)delegate
+            {
+                // drop the packet:
+                packet.PathWaitingTimes += packet.HopWaitingTimes; // save the path waiting time and clear the hop.
+                packet.isDelivered = false; //
+                PublicStatistics.DropedPacketsList.Add(packet);
+                packet.SourceVehicle.SetNotationSign(NotationsSign.Default);
+                packet.DestinationVehicle.WaitingPacketsIDsList.Remove(packet.PID);
+                SetNotationSign(NotationsSign.Default);
+                packet.DestinationVehicle.SetNotationSign(NotationsSign.Default);
+
+                PublicStatistics.InstanceDisplay(); // display.
+            });
         }
 
         public void RecievePacket(Packet packet)
         {
-            if (this == packet.DestinationVehicle)
+            Dispatcher.Invoke((Action)delegate
             {
-                packet.QueuingDelayStopWatch.Stop(); // stop the delay counter.
-                packet.isDelivered = true; //
-                PublicStatistics.DelaySumInSeconds += packet.DelayInSeconds; //  all delayes.
-                PublicStatistics.HopsSum += packet.Hops_V;
-                PublicStatistics.SumRoutingDistance += packet.RoutingDistance;
+                if (this == packet.DestinationVehicle)
+                {
 
-                PublicStatistics.DeleiverdPacketsList.Add(packet);
-                double x = PublicStatistics.DeleiverdPacketsCount; // trigger the display.
-                double xx = PublicStatistics.InQueuePackets; //trigger the display.
+                    packet.isDelivered = true; //
+                    PublicStatistics.SumCommunicationOverhead += packet.CommunicationOverhead;
+                    PublicStatistics.SumPropagationAndTransmissionDelay += packet.PropagationAndTransmissionDelay;
+                    PublicStatistics.QueueDelaySumInSeconds += packet.QueuingDelayInSecond; //
 
-                //  Console.WriteLine("-------------------- Packert " + packet.PID + " is sucessfully recived-------------------");
-                packet.SourceVehicle.SetNotationSign(NotationsSign.Default);
-                WaitingPacketsIDsList.Remove(packet.PID);
-                SetNotationSign(NotationsSign.Default);
-                packet.DestinationVehicle.SetNotationSign(NotationsSign.Default);
-            }
-            else
-            {
-                // re-transmit the packet.
-                if (packet.WaitingThreshold <= PublicParamerters.MaximumNumberofRetransmission)
+                    PublicStatistics.HopsSum += packet.HopsVehicles;
+                    PublicStatistics.SumRoutingDistance += packet.RoutingDistance;
+                    PublicStatistics.WaitingTimesSum += packet.PathWaitingTimes;
+                    PublicStatistics.DeleiverdPacketsList.Add(packet);
+
+
+                    //  Console.WriteLine("-------------------- Packert " + packet.PID + " is sucessfully recived-------------------");
+                    packet.SourceVehicle.SetNotationSign(NotationsSign.Default);
+                    WaitingPacketsIDsList.Remove(packet.PID);
+                    SetNotationSign(NotationsSign.Default);
+                    packet.DestinationVehicle.SetNotationSign(NotationsSign.Default);
+
+                    PublicStatistics.InstanceDisplay(); // display.
+                }
+                else
                 {
                     // forward the packet.
                     //check if this is the destination segment. then you should no select any
                     PacketQueue.Enqueue(packet); // put the packet in the queue.
-                    packet.QueuingDelayStopWatch.Start(); // resume the queue delay counter.
                     PacketQueueTimer.Start(); // run the transmitter.
                     PacketQueueTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.PacketQueueTimerInterval); // retry after...
                 }
-                else
-                {
-                    // drop the packet:
-                    packet.isDelivered = false; //
-                    packet.QueuingDelayStopWatch.Stop(); // stop the delay counter.
-                    PublicStatistics.DropedPacketsList.Add(packet);
-                    double x = PublicStatistics.DropedPacketsCount;
-                    packet.SourceVehicle.SetNotationSign(NotationsSign.Default);
-                    packet.DestinationVehicle.WaitingPacketsIDsList.Remove(packet.PID);
-                    SetNotationSign(NotationsSign.Default);
-                    packet.DestinationVehicle.SetNotationSign(NotationsSign.Default);
-                }
-            }
+            });
         }
 
         #endregion
@@ -748,208 +791,211 @@ namespace VANET_SIM.RoadNet.Components
         /// </summary>
         public void StartMove()
         {
-            VehicleUi infrontVehicle = CurrentLane.LaneVehicleAndQueue.GetMyFrontVehicle(this); // get in the front.
-            showInfo(PublicParamerters.DisplayInfoFlag); // show flage. // info which should be disply.
-            double headingDistance = RemianDistanceToHeadingJunction;
-            // to north:
-            if (VehicleDirection == Direction.N)
+           Dispatcher.Invoke((Action)delegate
             {
-                if (headingDistance > 0)
+                VehicleUi infrontVehicle = CurrentLane.LaneVehicleAndQueue.GetMyFrontVehicle(this); // get in the front.
+                showInfo(PublicParamerters.DisplayInfoFlag); // show flage. // info which should be disply.
+                double headingDistance = RemianDistanceToHeadingJunction;
+                // to north:
+                if (VehicleDirection == Direction.N)
                 {
-                    double marTop = this.Margin.Top;
-                    marTop -= 1;
-                    Margin = new Thickness(Margin.Left, marTop, 0, 0);
-                    // start decrease the speed according to the heading distance toward the jucntion.
-                    if (headingDistance <= SlowDownDistance)
+                    if (headingDistance > 0)
                     {
-                        double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
-                        InstantaneousSpeed = instanceSpeed;
-                    }
+                        double marTop = this.Margin.Top;
+                        marTop -= 1;
+                        //Margin = new Thickness(Margin.Left, marTop, 0, 0);
+                        Dispatcher.Invoke(new Action(() => Margin = new Thickness(Margin.Left, marTop, 0, 0)), DispatcherPriority.Send);
+                        // start decrease the speed according to the heading distance toward the jucntion.
+                        if (headingDistance <= SlowDownDistance)
+                        {
+                            double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
+                            InstantaneousSpeed = instanceSpeed;
+                        }
 
-                    // if has vechile in front: the behind vehicle should change the speed to or change the lane if possible.
-                    if (infrontVehicle != null)
-                    {
-                        //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
-                        if (headingDistance > AllowToChangeLaneDistance)
+                        // if has vechile in front: the behind vehicle should change the speed to or change the lane if possible.
+                        if (infrontVehicle != null)
                         {
-                            ChangeLaneRandomly();
-                        }
-                        else
-                        {
-                            // not allowd to change the lane.
-                           // double fronVspeed = 5;
-                            InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
-                        }
-                    }
-                    
-                    // change the lane randomnlly when v is in the middlel of the segment.
-                    if (marTop < CurrentLane.MyRoadSegment.Midpoint)
-                    {
-                        double half = CurrentLane.MyRoadSegment.Height / 2;
-                        if (headingDistance > half)
-                        {
-                            if (!ChangeLaneFlage)
+                            //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
+                            if (headingDistance > AllowToChangeLaneDistance)
                             {
                                 ChangeLaneRandomly();
-                                ChangeLaneFlage = true;
+                            }
+                            else
+                            {
+                                // not allowd to change the lane.
+                                // double fronVspeed = 5;
+                                InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
                             }
                         }
-                    }
 
-                    if(headingDistance< LineUpInJunctionDistance)
-                    {
-                        CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        // change the lane randomnlly when v is in the middlel of the segment.
+                        if (marTop < CurrentLane.MyRoadSegment.Midpoint)
+                        {
+                            double half = CurrentLane.MyRoadSegment.Height / 2;
+                            if (headingDistance > half)
+                            {
+                                if (!ChangeLaneFlage)
+                                {
+                                    ChangeLaneRandomly();
+                                    ChangeLaneFlage = true;
+                                }
+                            }
+                        }
+
+                        if (headingDistance < LineUpInJunctionDistance)
+                        {
+                            CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        }
                     }
                 }
-            }
-            else if (VehicleDirection == Direction.S)
-            {
-                if (headingDistance > 0)
+                else if (VehicleDirection == Direction.S)
                 {
-                    double marTop = this.Margin.Top;
-                    marTop += 1;
-                    Margin = new Thickness(Margin.Left, marTop, 0, 0);
+                    if (headingDistance > 0)
+                    {
+                        double marTop = this.Margin.Top;
+                        marTop += 1;
+                        // Margin = new Thickness(Margin.Left, marTop, 0, 0);
+                        Dispatcher.Invoke(new Action(() => Margin = new Thickness(Margin.Left, marTop, 0, 0)), DispatcherPriority.Send);
+                        if (headingDistance <= SlowDownDistance)
+                        {
+                            double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
+                            InstantaneousSpeed = instanceSpeed;
 
-                    if (headingDistance <= SlowDownDistance)
-                    {
-                        double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
-                        InstantaneousSpeed = instanceSpeed;
-                       
-                    }
+                        }
 
-                    if (infrontVehicle != null)
-                    {
-                        //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
-                        if (headingDistance > AllowToChangeLaneDistance)
+                        if (infrontVehicle != null)
                         {
-                            ChangeLaneRandomly();
-                        }
-                        else
-                        {
-                            InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
-                        }
-                    }
-                    if (marTop > CurrentLane.MyRoadSegment.Midpoint)
-                    {
-                        double half = CurrentLane.MyRoadSegment.Height / 2;
-                        if (headingDistance > half)
-                        {
-                            if (!ChangeLaneFlage)
+                            //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
+                            if (headingDistance > AllowToChangeLaneDistance)
                             {
                                 ChangeLaneRandomly();
-                                ChangeLaneFlage = true;
+                            }
+                            else
+                            {
+                                InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
                             }
                         }
-                    }
+                        if (marTop > CurrentLane.MyRoadSegment.Midpoint)
+                        {
+                            double half = CurrentLane.MyRoadSegment.Height / 2;
+                            if (headingDistance > half)
+                            {
+                                if (!ChangeLaneFlage)
+                                {
+                                    ChangeLaneRandomly();
+                                    ChangeLaneFlage = true;
+                                }
+                            }
+                        }
 
-                    if (headingDistance < LineUpInJunctionDistance)
-                    {
-                        CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        if (headingDistance < LineUpInJunctionDistance)
+                        {
+                            CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        }
                     }
                 }
-            }
-            else if (VehicleDirection == Direction.E)
-            {
-                if (headingDistance > 0)
+                else if (VehicleDirection == Direction.E)
                 {
-                    double marLeft = Margin.Left;
-                    double marTop = Margin.Top;
-                    marLeft += 1;
-                    Margin = new Thickness(marLeft, marTop, 0, 0);
-
-
-                    if (headingDistance <= SlowDownDistance)
+                    if (headingDistance > 0)
                     {
-                        double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
-                        InstantaneousSpeed = instanceSpeed;
-                    }
+                        double marLeft = Margin.Left;
+                        double marTop = Margin.Top;
+                        marLeft += 1;
+                        //   Margin = new Thickness(marLeft, marTop, 0, 0);
+                        Dispatcher.Invoke(new Action(() => Margin = new Thickness(marLeft, marTop, 0, 0)), DispatcherPriority.Send);
 
-                    if (infrontVehicle != null)
-                    {
-                        //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
-                        if (headingDistance > AllowToChangeLaneDistance)
+                        if (headingDistance <= SlowDownDistance)
                         {
-                            ChangeLaneRandomly();
+                            double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
+                            InstantaneousSpeed = instanceSpeed;
                         }
-                        else
+
+                        if (infrontVehicle != null)
                         {
-                            InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
-                        }
-                    }
-                    if (marLeft > CurrentLane.MyRoadSegment.Midpoint)
-                    {
-                        double half = CurrentLane.MyRoadSegment.Width / 2;
-                        if (headingDistance > half)
-                        {
-                            if (!ChangeLaneFlage)
+                            //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
+                            if (headingDistance > AllowToChangeLaneDistance)
                             {
                                 ChangeLaneRandomly();
-                                ChangeLaneFlage = true;
+                            }
+                            else
+                            {
+                                InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
                             }
                         }
-                    }
+                        if (marLeft > CurrentLane.MyRoadSegment.Midpoint)
+                        {
+                            double half = CurrentLane.MyRoadSegment.Width / 2;
+                            if (headingDistance > half)
+                            {
+                                if (!ChangeLaneFlage)
+                                {
+                                    ChangeLaneRandomly();
+                                    ChangeLaneFlage = true;
+                                }
+                            }
+                        }
 
-                    if (headingDistance < LineUpInJunctionDistance)
-                    {
-                        CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        if (headingDistance < LineUpInJunctionDistance)
+                        {
+                            CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        }
                     }
                 }
-            }
-            else if (VehicleDirection == Direction.W)
-            {
-                if (headingDistance > 0)
+                else if (VehicleDirection == Direction.W)
                 {
-
-                    double marLeft = Margin.Left;
-                    double marTop = Margin.Top;
-                    marLeft -= 1;
-                    Margin = new Thickness(marLeft, marTop, 0, 0);
-
-
-
-                    if (headingDistance <= SlowDownDistance)
+                    if (headingDistance > 0)
                     {
-                        double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
-                        InstantaneousSpeed = instanceSpeed;
-                    }
 
-                    if (infrontVehicle != null)
-                    {
-                        //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
-                        if (headingDistance > AllowToChangeLaneDistance)
+                        double marLeft = Margin.Left;
+                        double marTop = Margin.Top;
+                        marLeft -= 1;
+                        // Margin = new Thickness(marLeft, marTop, 0, 0);
+                        Dispatcher.Invoke(new Action(() => Margin = new Thickness(marLeft, marTop, 0, 0)), DispatcherPriority.Send);
+
+
+                        if (headingDistance <= SlowDownDistance)
                         {
-                            ChangeLaneRandomly();
+                            double instanceSpeed = Computations.GetTimeIntervalInSecond(headingDistance); // slow the speed.
+                            InstantaneousSpeed = instanceSpeed;
                         }
-                        else
+
+                        if (infrontVehicle != null)
                         {
-                            InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
-                        }
-                    }
-                    if (marLeft < CurrentLane.MyRoadSegment.Midpoint)
-                    {
-                        double half = CurrentLane.MyRoadSegment.Width / 2;
-                        if (headingDistance > half)
-                        {
-                            if (!ChangeLaneFlage)
+                            //: if still allowed to change the lane then go ahead. if not then the behind vechile should lower its speed.
+                            if (headingDistance > AllowToChangeLaneDistance)
                             {
                                 ChangeLaneRandomly();
-                                ChangeLaneFlage = true;
+                            }
+                            else
+                            {
+                                InstantaneousSpeed = infrontVehicle.InstantaneousSpeed * SpeedDisPercentage;
                             }
                         }
-                    }
+                        if (marLeft < CurrentLane.MyRoadSegment.Midpoint)
+                        {
+                            double half = CurrentLane.MyRoadSegment.Width / 2;
+                            if (headingDistance > half)
+                            {
+                                if (!ChangeLaneFlage)
+                                {
+                                    ChangeLaneRandomly();
+                                    ChangeLaneFlage = true;
+                                }
+                            }
+                        }
 
-                    if (headingDistance < LineUpInJunctionDistance)
-                    {
-                        CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        if (headingDistance < LineUpInJunctionDistance)
+                        {
+                            CurrentLane.LaneVehicleAndQueue.Enqueue(this); // add to the queue.
+                        }
                     }
                 }
-            }
+            });
         }
 
         private void MobilityTimer_Tick(object sender, EventArgs e)
         {
-            Action open1 = () => StartMove();
-            Dispatcher.Invoke(open1,DispatcherPriority.Send);
+            StartMove();
         }
 
         /// <summary>
@@ -958,91 +1004,92 @@ namespace VANET_SIM.RoadNet.Components
         /// <param name="lindex"></param>
         public void ChangeLaneRandomly()
         {
-            if (PublicParamerters.NumberOfLanes > 2)
+            Dispatcher.Invoke((Action)delegate
             {
-                RoadSegment rs = CurrentLane.MyRoadSegment;
-                LaneUi prevLane = CurrentLane;
-                LaneUi newlane = null;
-
-                if (prevLane.LaneDirection == Direction.N)
+                int lanConut = CurrentLane.MyRoadSegment.LanesCount;
+                if (lanConut > 2)
                 {
-                    newlane = rs.Lanes[LaneIndex.RandomLaneIndex.North];
+                    RoadSegment rs = CurrentLane.MyRoadSegment;
+                    LaneUi prevLane = CurrentLane;
+                    LaneUi newlane = null;
 
-                    prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
-                    this.CurrentLane = newlane;
-                    this.Margin = new Thickness(newlane.MyCenterLeft, this.Margin.Top, 0, 0);
-                    this.SetVehicleDirection(Direction.N);
+                    if (prevLane.LaneDirection == Direction.N)
+                    {
+                        newlane = rs.Lanes[LaneIndex.RandomLaneIndex.North(rs.LanesCount)];
+
+                        prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
+                        this.CurrentLane = newlane;
+                        this.Margin = new Thickness(newlane.MyCenterLeft, this.Margin.Top, 0, 0);
+                        this.SetVehicleDirection(Direction.N);
 
 
 
+                    }
+                    else if (prevLane.LaneDirection == Direction.S)
+                    {
+                        newlane = rs.Lanes[LaneIndex.RandomLaneIndex.South(rs.LanesCount)];
+
+                        prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
+                        this.CurrentLane = newlane;
+                        this.Margin = new Thickness(newlane.MyCenterLeft, this.Margin.Top, 0, 0);
+                        this.SetVehicleDirection(Direction.S);
+
+                    }
+
+                    else if (prevLane.LaneDirection == Direction.E)
+                    {
+                        newlane = rs.Lanes[LaneIndex.RandomLaneIndex.East(rs.LanesCount)];
+
+                        prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
+                        this.CurrentLane = newlane;
+                        this.Margin = new Thickness(this.Margin.Left, newlane.MyCenterTop, 0, 0);
+                        this.SetVehicleDirection(Direction.E);
+                    }
+
+                    else if (prevLane.LaneDirection == Direction.W)
+                    {
+                        newlane = rs.Lanes[LaneIndex.RandomLaneIndex.West(rs.LanesCount)];
+
+                        prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
+                        this.CurrentLane = newlane;
+                        this.Margin = new Thickness(this.Margin.Left, newlane.MyCenterTop, 0, 0);
+                        this.SetVehicleDirection(Direction.W);
+
+                    }
+
+                    // change my speed to random.
+                    double instanceSpeed = Computations.GetTimeIntervalInSecond(Computations.RandomSpeedkmh(CurrentLane.MyRoadSegment)); // slow the speed.
+                    InstantaneousSpeed = instanceSpeed;
+
+                    // display:
+                    prevLane._MainWindow.Dispatcher.Invoke(new Action(() => prevLane.lbl_info.Text = prevLane.LaneVehicleAndQueue.CountInLane.ToString()), DispatcherPriority.Send);
                 }
-                else if (prevLane.LaneDirection == Direction.S)
-                {
-                    newlane = rs.Lanes[LaneIndex.RandomLaneIndex.South];
-
-                    prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
-                    this.CurrentLane = newlane;
-                    this.Margin = new Thickness(newlane.MyCenterLeft, this.Margin.Top, 0, 0);
-                    this.SetVehicleDirection(Direction.S);
-
-                }
-
-                else if (prevLane.LaneDirection == Direction.E)
-                {
-                    newlane = rs.Lanes[LaneIndex.RandomLaneIndex.East];
-
-                    prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
-                    this.CurrentLane = newlane;
-                    this.Margin = new Thickness(this.Margin.Left, newlane.MyCenterTop, 0, 0);
-                    this.SetVehicleDirection(Direction.E);
-                }
-
-                else if (prevLane.LaneDirection == Direction.W)
-                {
-                    newlane = rs.Lanes[LaneIndex.RandomLaneIndex.West];
-
-                    prevLane.LaneVehicleAndQueue.RemoveFromLane(this);
-                    this.CurrentLane = newlane;
-                    this.Margin = new Thickness(this.Margin.Left, newlane.MyCenterTop, 0, 0);
-                    this.SetVehicleDirection(Direction.W);
-
-                }
-
-                // change my speed to random.
-                double instanceSpeed = Computations.GetTimeIntervalInSecond(Computations.RandomSpeedkmh(CurrentLane.MyRoadSegment)); // slow the speed.
-                InstantaneousSpeed = instanceSpeed;
-
-                // display:
-                prevLane._MainWindow.Dispatcher.Invoke(new Action(() => prevLane.lbl_info.Text = prevLane.LaneVehicleAndQueue.CountInLane.ToString()), DispatcherPriority.Send);
-            }
-
-
-           
-            
-
-
+            });
         }
 
         
 
         public void SetVehicleDirection(Direction dir)
         {
-            if (dir == Direction.N)
+            Dispatcher.Invoke((Action)delegate
             {
-                txt_vehicle.Text = "▲";
-            }
-            else if (dir == Direction.S)
-            {
-                txt_vehicle.Text = "▼";
-            }
-            else if (dir == Direction.E)
-            {
-                txt_vehicle.Text = "►";
-            }
-            else if (dir == Direction.W)
-            {
-                txt_vehicle.Text = "◄";
-            }
+                if (dir == Direction.N)
+                {
+                    txt_vehicle.Text = "▲";
+                }
+                else if (dir == Direction.S)
+                {
+                    txt_vehicle.Text = "▼";
+                }
+                else if (dir == Direction.E)
+                {
+                    txt_vehicle.Text = "►";
+                }
+                else if (dir == Direction.W)
+                {
+                    txt_vehicle.Text = "◄";
+                }
+            });
         }
 
         

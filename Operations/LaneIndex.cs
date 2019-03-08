@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace VANET_SIM.Operations
+namespace VSIM.Operations
 {
 
     public static class LaneIndex
@@ -13,68 +13,50 @@ namespace VANET_SIM.Operations
         /// </summary>
         public static class RandomLaneIndex
         {
-            public static int ZeroToMax
+            public static int ZeroToMax( int max)
             {
-                get
-                {
-                    double rando = RandomeNumberGenerator.GetUniform(0, PublicParamerters.NumberOfLanes - 1);
-                    int x = Convert.ToInt16(rando);
-                    return x;
-                }
+                double rando = RandomeNumberGenerator.GetUniform(0, max - 1);
+                int x = Convert.ToInt16(rando);
+                return x;
             }
 
-            public static int OneToHalf
+            public static int OneToHalf (int max)
             {
-                get
-                {
-                    int halLanes = Convert.ToInt16(PublicParamerters.NumberOfLanes / 2);
-                    double rando = RandomeNumberGenerator.GetUniform(0, halLanes - 1);
-                    int x = Convert.ToInt16(rando);
-                    return x;
-                }
+                int halLanes = Convert.ToInt16(max / 2);
+                double rando = RandomeNumberGenerator.GetUniform(0, halLanes - 1);
+                int x = Convert.ToInt16(rando);
+                return x;
             }
 
-            public static int North
+            public static int North(int max)
             {
-                get
-                {
-                    int halLanes = Convert.ToInt16(PublicParamerters.NumberOfLanes / 2);
-                    double rando = RandomeNumberGenerator.GetUniform(halLanes-1);
-                    int x = halLanes + Convert.ToInt16(rando);
-                    return x;
-                }
+                int halLanes = Convert.ToInt16(max / 2);
+                double rando = RandomeNumberGenerator.GetUniform(halLanes - 1);
+                int x = halLanes + Convert.ToInt16(rando);
+                return x;
             }
-            public static int South
+            public static int South(int max)
             {
-                get
-                {
-                    int halLanes = Convert.ToInt16(PublicParamerters.NumberOfLanes / 2);
-                    double rando = RandomeNumberGenerator.GetUniform(halLanes-1);
-                    int x =Convert.ToInt16(rando);
-                    return x;
-                }
+                int halLanes = Convert.ToInt16(max / 2);
+                double rando = RandomeNumberGenerator.GetUniform(halLanes - 1);
+                int x = Convert.ToInt16(rando);
+                return x;
             }
 
-            public static int West
+            public static int West(int max)
             {
-                get
-                {
-                    int halLanes = Convert.ToInt16(PublicParamerters.NumberOfLanes / 2);
-                    double rando = RandomeNumberGenerator.GetUniform(halLanes - 1);
-                    int x = Convert.ToInt16(rando);
-                    return x;
-                }
+                int halLanes = Convert.ToInt16(max / 2);
+                double rando = RandomeNumberGenerator.GetUniform(halLanes - 1);
+                int x = Convert.ToInt16(rando);
+                return x;
             }
 
-            public static int East
+            public static int East(int max)
             {
-                get
-                {
-                    int halLanes = Convert.ToInt16(PublicParamerters.NumberOfLanes / 2);
-                    double rando = RandomeNumberGenerator.GetUniform(halLanes-1);
-                    int x = halLanes + Convert.ToInt16(rando);
-                    return x;
-                }
+                int halLanes = Convert.ToInt16(max / 2);
+                double rando = RandomeNumberGenerator.GetUniform(halLanes - 1);
+                int x = halLanes + Convert.ToInt16(rando);
+                return x;
             }
         }
     

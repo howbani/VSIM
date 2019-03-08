@@ -1,12 +1,12 @@
-﻿<Window x:Class="VANET_SIM.UI.UiShowResults"
+﻿<Window x:Class="VSIM.UI.UiShowResults"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VANET_SIM.UI"
+        xmlns:local="clr-namespace:VSIM.UI"
         mc:Ignorable="d"
         Title="Show" Height="450" Width="800">
     <Grid>
-        <DataGrid Name="dg_results"></DataGrid>
+        <DataGrid Name="dg_results" SelectionMode="Extended" SelectionUnit="CellOrRowHeader"></DataGrid>
     </Grid>
 </Window>

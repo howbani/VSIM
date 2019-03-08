@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
-using VANET_SIM.RoadNet.Components;
+using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.Operations
+namespace VSIM.Operations
 {
    public class SegmentSwitch
     {
@@ -235,7 +235,7 @@ namespace VANET_SIM.Operations
                                 {
                                     // 掉头：north to south:
                                     RoadSegment toSouthSegment = _junction.ToSouthRoadSegment; // select the segment
-                                    vehicle.CurrentLane = toSouthSegment.Lanes[LaneIndex.RandomLaneIndex.South];
+                                    vehicle.CurrentLane = toSouthSegment.Lanes[LaneIndex.RandomLaneIndex.South(toSouthSegment.LanesCount)];
                                     prevlan.LaneVehicleAndQueue.Dequeue(); // remove from prev:
                                     vehicle.ChangeLaneFlage = false;
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment); ; // keep the same speed.
@@ -271,7 +271,7 @@ namespace VANET_SIM.Operations
                             if (switchToRs != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = switchToRs.Lanes[LaneIndex.RandomLaneIndex.West]; // the new lane.------------------------------------
+                                vehicle.CurrentLane = switchToRs.Lanes[LaneIndex.RandomLaneIndex.West(switchToRs.LanesCount)]; // the new lane.------------------------------------
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment); ;
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -302,7 +302,7 @@ namespace VANET_SIM.Operations
                                 {
 
                                     RoadSegment toSouthSegment = _junction.ToSouthRoadSegment; // select the segment
-                                    vehicle.CurrentLane = toSouthSegment.Lanes[LaneIndex.RandomLaneIndex.South];
+                                    vehicle.CurrentLane = toSouthSegment.Lanes[LaneIndex.RandomLaneIndex.South(toSouthSegment.LanesCount)];
                                     prevlan.LaneVehicleAndQueue.Dequeue(); // remove from prev:
                                     vehicle.ChangeLaneFlage = false;
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment); ; // keep the same speed.
@@ -338,7 +338,7 @@ namespace VANET_SIM.Operations
                             if (switchToRs != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = switchToRs.Lanes[LaneIndex.RandomLaneIndex.East]; // the new lane.
+                                vehicle.CurrentLane = switchToRs.Lanes[LaneIndex.RandomLaneIndex.East(switchToRs.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -367,7 +367,7 @@ namespace VANET_SIM.Operations
                                 else
                                 {
                                     RoadSegment toSouthSegment = _junction.ToSouthRoadSegment; // select the segment
-                                    vehicle.CurrentLane = toSouthSegment.Lanes[LaneIndex.RandomLaneIndex.South];
+                                    vehicle.CurrentLane = toSouthSegment.Lanes[LaneIndex.RandomLaneIndex.South(toSouthSegment.LanesCount)];
                                     prevlan.LaneVehicleAndQueue.Dequeue(); // remove from prev:
                                     vehicle.ChangeLaneFlage = false;
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment); // keep the same speed.
@@ -440,7 +440,7 @@ namespace VANET_SIM.Operations
                                 {
                                     // 掉头：
                                     RoadSegment southRS = _junction.ToNorthRoadSegment;
-                                    vehicle.CurrentLane = southRS.Lanes[LaneIndex.RandomLaneIndex.North];
+                                    vehicle.CurrentLane = southRS.Lanes[LaneIndex.RandomLaneIndex.North(southRS.LanesCount)];
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment); // keep the same speed.
@@ -475,7 +475,7 @@ namespace VANET_SIM.Operations
                             if (toWestRoad != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = toWestRoad.Lanes[LaneIndex.RandomLaneIndex.West]; // the new lane.
+                                vehicle.CurrentLane = toWestRoad.Lanes[LaneIndex.RandomLaneIndex.West(toWestRoad.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -508,7 +508,7 @@ namespace VANET_SIM.Operations
                                 {
                                     // 掉头：
                                     RoadSegment southRS = _junction.ToNorthRoadSegment;
-                                    vehicle.CurrentLane = southRS.Lanes[LaneIndex.RandomLaneIndex.North];
+                                    vehicle.CurrentLane = southRS.Lanes[LaneIndex.RandomLaneIndex.North(southRS.LanesCount)];
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment); // keep the same speed.
@@ -543,7 +543,7 @@ namespace VANET_SIM.Operations
                             if (ToEastRoad != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = ToEastRoad.Lanes[LaneIndex.RandomLaneIndex.East]; // the new lane.
+                                vehicle.CurrentLane = ToEastRoad.Lanes[LaneIndex.RandomLaneIndex.East(ToEastRoad.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -575,7 +575,7 @@ namespace VANET_SIM.Operations
                                 {
                                     // 掉头：
                                     RoadSegment southRS = _junction.ToNorthRoadSegment;
-                                    vehicle.CurrentLane = southRS.Lanes[LaneIndex.RandomLaneIndex.North];
+                                    vehicle.CurrentLane = southRS.Lanes[LaneIndex.RandomLaneIndex.North(southRS.LanesCount)];
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment); // keep the same speed.
@@ -647,7 +647,7 @@ namespace VANET_SIM.Operations
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     RoadSegment westRS = _junction.ToWestRoadSegment;
-                                    vehicle.CurrentLane = westRS.Lanes[LaneIndex.RandomLaneIndex.West];
+                                    vehicle.CurrentLane = westRS.Lanes[LaneIndex.RandomLaneIndex.West(westRS.LanesCount)];
                                     Point entry = vehicle.CurrentLane.MyEntry(vehicle);
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment);
                                     vehicle.Margin = new Thickness(entry.X, entry.Y, 0, 0);
@@ -683,7 +683,7 @@ namespace VANET_SIM.Operations
                             if (toNorthRoad != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = toNorthRoad.Lanes[LaneIndex.RandomLaneIndex.North]; // the new lane.
+                                vehicle.CurrentLane = toNorthRoad.Lanes[LaneIndex.RandomLaneIndex.North(toNorthRoad.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -717,7 +717,7 @@ namespace VANET_SIM.Operations
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     RoadSegment westRS = _junction.ToWestRoadSegment;
-                                    vehicle.CurrentLane = westRS.Lanes[LaneIndex.RandomLaneIndex.West];
+                                    vehicle.CurrentLane = westRS.Lanes[LaneIndex.RandomLaneIndex.West(westRS.LanesCount)];
                                     Point entry = vehicle.CurrentLane.MyEntry(vehicle);
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment);
                                     vehicle.Margin = new Thickness(entry.X, entry.Y, 0, 0);
@@ -751,7 +751,7 @@ namespace VANET_SIM.Operations
                             if (toSouth != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = toSouth.Lanes[LaneIndex.RandomLaneIndex.South]; // the new lane.
+                                vehicle.CurrentLane = toSouth.Lanes[LaneIndex.RandomLaneIndex.South(toSouth.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -785,7 +785,7 @@ namespace VANET_SIM.Operations
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     RoadSegment westRS = _junction.ToWestRoadSegment;
-                                    vehicle.CurrentLane = westRS.Lanes[LaneIndex.RandomLaneIndex.West];
+                                    vehicle.CurrentLane = westRS.Lanes[LaneIndex.RandomLaneIndex.West(westRS.LanesCount)];
                                     Point entry = vehicle.CurrentLane.MyEntry(vehicle);
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment);
                                     vehicle.Margin = new Thickness(entry.X, entry.Y, 0, 0);
@@ -858,7 +858,7 @@ namespace VANET_SIM.Operations
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     RoadSegment goreversers = _junction.ToEastRoadSegment;
-                                    vehicle.CurrentLane = goreversers.Lanes[LaneIndex.RandomLaneIndex.East];
+                                    vehicle.CurrentLane = goreversers.Lanes[LaneIndex.RandomLaneIndex.East(goreversers.LanesCount)];
                                     Point entry = vehicle.CurrentLane.MyEntry(vehicle);
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment);
                                     vehicle.Margin = new Thickness(entry.X, entry.Y, 0, 0);
@@ -891,7 +891,7 @@ namespace VANET_SIM.Operations
                             if (toShouth != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = toShouth.Lanes[LaneIndex.RandomLaneIndex.South]; // the new lane.
+                                vehicle.CurrentLane = toShouth.Lanes[LaneIndex.RandomLaneIndex.South(toShouth.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -925,7 +925,7 @@ namespace VANET_SIM.Operations
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     RoadSegment goreversers = _junction.ToEastRoadSegment;
-                                    vehicle.CurrentLane = goreversers.Lanes[LaneIndex.RandomLaneIndex.East];
+                                    vehicle.CurrentLane = goreversers.Lanes[LaneIndex.RandomLaneIndex.East(goreversers.LanesCount)];
                                     Point entry = vehicle.CurrentLane.MyEntry(vehicle);
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment);
                                     vehicle.Margin = new Thickness(entry.X, entry.Y, 0, 0);
@@ -958,7 +958,7 @@ namespace VANET_SIM.Operations
                             if (toNorth != null)
                             {
                                 prevlan.LaneVehicleAndQueue.Dequeue();
-                                vehicle.CurrentLane = toNorth.Lanes[LaneIndex.RandomLaneIndex.North]; // the new lane.
+                                vehicle.CurrentLane = toNorth.Lanes[LaneIndex.RandomLaneIndex.North(toNorth.LanesCount)]; // the new lane.
                                 vehicle.ChangeLaneFlage = false;
                                 vehicle.InstantaneousSpeed = Computations.RandomTimeInterval(vehicle.CurrentLane.MyRoadSegment);
                                 Point entry = vehicle.CurrentLane.MyEntry(vehicle);
@@ -992,7 +992,7 @@ namespace VANET_SIM.Operations
                                     prevlan.LaneVehicleAndQueue.Dequeue();
                                     vehicle.ChangeLaneFlage = false;
                                     RoadSegment goreversers = _junction.ToEastRoadSegment;
-                                    vehicle.CurrentLane = goreversers.Lanes[LaneIndex.RandomLaneIndex.East];
+                                    vehicle.CurrentLane = goreversers.Lanes[LaneIndex.RandomLaneIndex.East(goreversers.LanesCount)];
                                     Point entry = vehicle.CurrentLane.MyEntry(vehicle);
                                     vehicle.VechileEnginTimer.Interval = Computations.RandomTimeSpane(vehicle.CurrentLane.MyRoadSegment);
                                     vehicle.Margin = new Thickness(entry.X, entry.Y, 0, 0);

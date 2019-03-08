@@ -1,5 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VANET_SIM.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VSIM.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="IsIntialized" Type="System.Boolean" Scope="User">
@@ -9,19 +9,67 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="MaxNumberOfVehicles" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">120</Value>
+      <Value Profile="(Default)">100</Value>
     </Setting>
-    <Setting Name="WeightConn" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.3</Value>
+    <Setting Name="WeightConnectivity" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.4</Value>
     </Setting>
     <Setting Name="WeightShortestDistance" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.7</Value>
+      <Value Profile="(Default)">0.6</Value>
     </Setting>
-    <Setting Name="IntraRDirectionPar" Type="System.Double" Scope="User">
-      <Value Profile="(Default)">0.1</Value>
+    <Setting Name="IntraVehiForwardDirectionPar" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0.5</Value>
     </Setting>
-    <Setting Name="Ammar" Type="System.String" Scope="User">
-      <Value Profile="(Default)">"a"</Value>
+    <Setting Name="CommunicationRange" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="MaxSpeed" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
+    <Setting Name="MinSpeed" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">30</Value>
+    </Setting>
+    <Setting Name="NumberofPackets" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="Rows_net_top" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="Cols_net_top" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="HorizontalLength" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="VerticalLength" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="LaneCount_top_gen" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="SliderValue" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="MaximumAttemps" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="MaxStoreTime" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="NetTopName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">None</Value>
+    </Setting>
+    <Setting Name="TraficSignalingTimerInterval" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
+    <Setting Name="DistanceImportance" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="DistanceBetweenSourceAndDestination" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="IntraVehiBackwardDirectionPar" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">1</Value>
     </Setting>
   </Settings>
 </SettingsFile>

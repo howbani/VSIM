@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace VANET_SIM.db
+namespace VSIM.db
 {
 
     /// <summary>

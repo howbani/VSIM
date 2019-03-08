@@ -13,11 +13,11 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using VANET_SIM.Operations;
-using VANET_SIM.Properties;
-using VANET_SIM.Routing;
+using VSIM.Operations;
+using VSIM.Properties;
+using VSIM.Routing;
 
-namespace VANET_SIM.RoadNet.Components
+namespace VSIM.RoadNet.Components
 {
     /// <summary>
     /// Interaction logic for Junction.xaml
@@ -42,7 +42,7 @@ namespace VANET_SIM.RoadNet.Components
             _MainWindow = MAINWINDOW;
 
             CurrentTraficSignal = TraficSignal.VerticalGreen;
-            TraficSignalingTimer.Interval = TimeSpan.FromSeconds(PublicParamerters.TraficSignalingTimerInterval);
+            TraficSignalingTimer.Interval = TimeSpan.FromSeconds(Settings.Default.TraficSignalingTimerInterval);
             TraficSignalingTimer.Start();
             TraficSignalingTimer.Tick += TraficSignalingTimer_Tick;
 
@@ -111,117 +111,120 @@ namespace VANET_SIM.RoadNet.Components
         private int _hgc = 0;  // _HorizontalGreenCounter: instance counter.
         private void TraficSignalingTimer_Tick(object sender, EventArgs e)
         {
-            //open
-            Action n2e = () => SegSwitch.SwitchNorthToEastSegment();
-            Dispatcher.Invoke(n2e, DispatcherPriority.Send);
-            Action s2w = () => SegSwitch.SwitchSouthToWestSegment();
-            Dispatcher.Invoke(s2w, DispatcherPriority.Send);
-            Action e2s = () => SegSwitch.SwitchEastToSouthSegment();
-            Dispatcher.Invoke(e2s, DispatcherPriority.Send);
-            Action w2n = () => SegSwitch.SwitchWestToNorthSegment();
-            Dispatcher.Invoke(w2n, DispatcherPriority.Send);
-
-            
-            if (IncicdentRoadSegmentCount ==2 || IncicdentRoadSegmentCount==1)
+            Dispatcher.Invoke((Action)delegate
             {
-                // green all the time.
-                CurrentTraficSignal = TraficSignal.VerticalGreen;
-                CurrentTraficSignal = TraficSignal.HorizontalGreen;
+                //open
+                Action n2e = () => SegSwitch.SwitchNorthToEastSegment();
+                Dispatcher.Invoke(n2e, DispatcherPriority.Send);
+                Action s2w = () => SegSwitch.SwitchSouthToWestSegment();
+                Dispatcher.Invoke(s2w, DispatcherPriority.Send);
+                Action e2s = () => SegSwitch.SwitchEastToSouthSegment();
+                Dispatcher.Invoke(e2s, DispatcherPriority.Send);
+                Action w2n = () => SegSwitch.SwitchWestToNorthSegment();
+                Dispatcher.Invoke(w2n, DispatcherPriority.Send);
 
-                lbl_ver_north.Foreground = Brushes.Green;
-                lbl_ver_south.Foreground = Brushes.Green;
-                lbl_hor_west.Foreground = Brushes.Green;
-                lbl_hor_east.Foreground = Brushes.Green;
-                // open all.
-                Action n2n = () => SegSwitch.SwitchNorthToNorthSegment();
-                Dispatcher.Invoke(n2n);
-                Action s2s = () => SegSwitch.SwitchSouthToSouthSegment();
-                Dispatcher.Invoke(s2s, DispatcherPriority.Send);
 
-                // north west or south east.
-                Action n2w = () => SegSwitch.SwitchNorthToWestSegment();
-                Dispatcher.Invoke(n2w);
-                Action s2e = () => SegSwitch.SwitchSouthToEastSegment();
-                Dispatcher.Invoke(s2e, DispatcherPriority.Send);
-
-                Action e2e = () => SegSwitch.SwitchEastToEastSegment();
-                Dispatcher.Invoke(e2e, DispatcherPriority.Send);
-                Action w2w = () => SegSwitch.SwitchWestToWestSegment();
-                Dispatcher.Invoke(w2w, DispatcherPriority.Send);
-
-                Action e2n = () => SegSwitch.SwitchEastToNorthSegment();
-                Dispatcher.Invoke(e2n, DispatcherPriority.Send);
-                Action w2s = () => SegSwitch.SwitchWestToSouthSegment();
-                Dispatcher.Invoke(w2s, DispatcherPriority.Send);
-
-            }
-            if (IncicdentRoadSegmentCount==3 || IncicdentRoadSegmentCount==4)
-            {
-                // need to swhich between green and re.
-                if (CurrentTraficSignal == TraficSignal.VerticalGreen)
+                if (IncicdentRoadSegmentCount == 2 || IncicdentRoadSegmentCount == 1)
                 {
-                    _vgc++;
-                    if (_vgc <= VerticalGreenValue)
+                    // green all the time.
+                    CurrentTraficSignal = TraficSignal.VerticalGreen;
+                    CurrentTraficSignal = TraficSignal.HorizontalGreen;
+
+                    lbl_ver_north.Foreground = Brushes.Green;
+                    lbl_ver_south.Foreground = Brushes.Green;
+                    lbl_hor_west.Foreground = Brushes.Green;
+                    lbl_hor_east.Foreground = Brushes.Green;
+                    // open all.
+                    Action n2n = () => SegSwitch.SwitchNorthToNorthSegment();
+                    Dispatcher.Invoke(n2n);
+                    Action s2s = () => SegSwitch.SwitchSouthToSouthSegment();
+                    Dispatcher.Invoke(s2s, DispatcherPriority.Send);
+
+                    // north west or south east.
+                    Action n2w = () => SegSwitch.SwitchNorthToWestSegment();
+                    Dispatcher.Invoke(n2w);
+                    Action s2e = () => SegSwitch.SwitchSouthToEastSegment();
+                    Dispatcher.Invoke(s2e, DispatcherPriority.Send);
+
+                    Action e2e = () => SegSwitch.SwitchEastToEastSegment();
+                    Dispatcher.Invoke(e2e, DispatcherPriority.Send);
+                    Action w2w = () => SegSwitch.SwitchWestToWestSegment();
+                    Dispatcher.Invoke(w2w, DispatcherPriority.Send);
+
+                    Action e2n = () => SegSwitch.SwitchEastToNorthSegment();
+                    Dispatcher.Invoke(e2n, DispatcherPriority.Send);
+                    Action w2s = () => SegSwitch.SwitchWestToSouthSegment();
+                    Dispatcher.Invoke(w2s, DispatcherPriority.Send);
+
+                }
+                if (IncicdentRoadSegmentCount == 3 || IncicdentRoadSegmentCount == 4)
+                {
+                    // need to swhich between green and re.
+                    if (CurrentTraficSignal == TraficSignal.VerticalGreen)
                     {
-                        Action a1 = () => SegSwitch.SwitchNorthToNorthSegment();
-                        Dispatcher.Invoke(a1);
-                        Action a2 = () => SegSwitch.SwitchSouthToSouthSegment();
-                        Dispatcher.Invoke(a2, DispatcherPriority.Send);
+                        _vgc++;
+                        if (_vgc <= VerticalGreenValue)
+                        {
+                            Action a1 = () => SegSwitch.SwitchNorthToNorthSegment();
+                            Dispatcher.Invoke(a1);
+                            Action a2 = () => SegSwitch.SwitchSouthToSouthSegment();
+                            Dispatcher.Invoke(a2, DispatcherPriority.Send);
 
 
+                        }
+                        else if (_vgc > VerticalGreenValue && _vgc <= (VerticalGreenValue * 2))
+                        {
+                            // north west or south east.
+                            Action a3 = () => SegSwitch.SwitchNorthToWestSegment();
+                            Dispatcher.Invoke(a3);
+                            Action a4 = () => SegSwitch.SwitchSouthToEastSegment();
+                            Dispatcher.Invoke(a4, DispatcherPriority.Send);
+
+
+                        }
+                        else
+                        {
+                            CurrentTraficSignal = TraficSignal.HorizontalGreen; // change.
+                            lbl_ver_north.Foreground = Brushes.Red;
+                            lbl_ver_south.Foreground = Brushes.Red;
+
+                            lbl_hor_west.Foreground = Brushes.Green;
+                            lbl_hor_east.Foreground = Brushes.Green;
+
+                            _vgc = 0;
+                            _hgc = 0;
+                        }
                     }
-                    else if (_vgc > VerticalGreenValue && _vgc <= (VerticalGreenValue*2))
+                    else if (CurrentTraficSignal == TraficSignal.HorizontalGreen)
                     {
-                        // north west or south east.
-                        Action a3 = () => SegSwitch.SwitchNorthToWestSegment();
-                        Dispatcher.Invoke(a3);
-                        Action a4 = () => SegSwitch.SwitchSouthToEastSegment();
-                        Dispatcher.Invoke(a4, DispatcherPriority.Send);
-
-
-                    }
-                    else
-                    {
-                        CurrentTraficSignal = TraficSignal.HorizontalGreen; // change.
-                        lbl_ver_north.Foreground = Brushes.Red;
-                        lbl_ver_south.Foreground = Brushes.Red;
-
-                        lbl_hor_west.Foreground = Brushes.Green;
-                        lbl_hor_east.Foreground = Brushes.Green;
-
-                        _vgc = 0;
-                        _hgc = 0;
+                        _hgc++;
+                        if (_hgc <= HorizontalGreenValue)
+                        {
+                            Action a5 = () => SegSwitch.SwitchEastToEastSegment();
+                            Dispatcher.Invoke(a5, DispatcherPriority.Send);
+                            Action a6 = () => SegSwitch.SwitchWestToWestSegment();
+                            Dispatcher.Invoke(a6, DispatcherPriority.Send);
+                        }
+                        else if (_hgc > HorizontalGreenValue && _hgc <= (HorizontalGreenValue * 2))
+                        {
+                            Action a7 = () => SegSwitch.SwitchEastToNorthSegment();
+                            Dispatcher.Invoke(a7, DispatcherPriority.Send);
+                            Action a8 = () => SegSwitch.SwitchWestToSouthSegment();
+                            Dispatcher.Invoke(a8, DispatcherPriority.Send);
+                        }
+                        else
+                        {
+                            CurrentTraficSignal = TraficSignal.VerticalGreen;
+                            lbl_ver_north.Foreground = Brushes.Green;
+                            lbl_ver_south.Foreground = Brushes.Green;
+                            lbl_hor_west.Foreground = Brushes.Red;
+                            lbl_hor_east.Foreground = Brushes.Red;
+                            _vgc = 0;
+                            _hgc = 0;
+                        }
                     }
                 }
-                else if (CurrentTraficSignal == TraficSignal.HorizontalGreen)
-                {
-                    _hgc++;
-                    if (_hgc <= HorizontalGreenValue)
-                    {
-                        Action a5 = () => SegSwitch.SwitchEastToEastSegment();
-                        Dispatcher.Invoke(a5, DispatcherPriority.Send);
-                        Action a6 = () => SegSwitch.SwitchWestToWestSegment();
-                        Dispatcher.Invoke(a6, DispatcherPriority.Send);
-                    }
-                    else if (_hgc > HorizontalGreenValue && _hgc <= (HorizontalGreenValue * 2))
-                    {
-                        Action a7 = () => SegSwitch.SwitchEastToNorthSegment();
-                        Dispatcher.Invoke(a7, DispatcherPriority.Send);
-                        Action a8 = () => SegSwitch.SwitchWestToSouthSegment();
-                        Dispatcher.Invoke(a8, DispatcherPriority.Send);
-                    }
-                    else
-                    {
-                        CurrentTraficSignal = TraficSignal.VerticalGreen;
-                        lbl_ver_north.Foreground = Brushes.Green;
-                        lbl_ver_south.Foreground = Brushes.Green;
-                        lbl_hor_west.Foreground = Brushes.Red;
-                        lbl_hor_east.Foreground = Brushes.Red;
-                        _vgc = 0;
-                        _hgc = 0;
-                    }
-                }
-            }
+            });
         }
 
 
@@ -235,6 +238,10 @@ namespace VANET_SIM.RoadNet.Components
         public Point BottomLeftCorner => new Point(Margin.Left, Margin.Top + Height);
 
         public Point BottomRightCorner => new Point(Margin.Left + Width, Margin.Top + Height);
+
+        public Point RightCenter => new Point(Margin.Left + Width, Margin.Top + (Height / 2));
+        public Point BottomCenter => new Point(Margin.Left + (Width/2), Margin.Top + (Height));
+
 
         #region Draage Object
 

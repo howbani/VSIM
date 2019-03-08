@@ -1,4 +1,4 @@
-﻿<Window x:Class="VANET_SIM.db.UiExportTopology"
+﻿<Window x:Class="VSIM.db.UiExportTopology"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Export Vanet" Height="150" Width="300">

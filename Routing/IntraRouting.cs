@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using VANET_SIM.Operations;
-using VANET_SIM.Properties;
-using VANET_SIM.RoadNet.Components;
-using VANET_SIM.UI;
+using VSIM.Operations;
+using VSIM.Properties;
+using VSIM.RoadNet.Components;
+using VSIM.UI;
 
-namespace VANET_SIM.Routing
+namespace VSIM.Routing
 {
     
     public class CandidateVehicle
@@ -25,7 +25,11 @@ namespace VANET_SIM.Routing
 
         public double HeursticFunction => MovingDirection * (SignalFadingDistribution + SpeedDifferenceDistribution + BufferSizeDistribution);
 
-        public double Priority{ get; set; } 
+        public double Priority{ get; set; }
+
+        public double NeighborsAssortment => SignalFadingDistribution * SpeedDifferenceDistribution;
+
+
 
         public VehicleUi SelectedVehicle { get; set; } // CANDIDAT VE
     }
@@ -72,7 +76,7 @@ namespace VANET_SIM.Routing
                         jcan.SVID = i.VID;
                         jcan.SelectedVehicle = j;
                         jcan.BufferSizeDistribution = BufferSizeDistribution(j.PacketQueue.Count, PublicParamerters.BufferSize);
-                        jcan.SignalFadingDistribution = SignalFadingDistribution(Computations.Distance(i.InstanceLocation, j.InstanceLocation), PublicParamerters.CommunicationRaduis);
+                        jcan.SignalFadingDistribution = SignalFadingDistribution(Computations.Distance(i.InstanceLocation, j.InstanceLocation), Settings.Default.CommunicationRange);
                         jcan.SpeedDifferenceDistribution = SpeedDifferenceDistribution(i.GetSpeedInKMH, j.GetSpeedInKMH, roadSegment.MaxAllowedSpeed);
                         jcan.MovingDirection = MovingDirection(i.InstanceLocation, j.InstanceLocation, desVehicle.InstanceLocation);
 
@@ -82,6 +86,8 @@ namespace VANET_SIM.Routing
                         {
                             return jcan;
                         }
+
+                        Console.WriteLine("NeighborsAssortment: " + jcan.NeighborsAssortment.ToString());
                     }
                     else
                     {
@@ -90,24 +96,26 @@ namespace VANET_SIM.Routing
                         jcan.SVID = i.VID;
                         jcan.SelectedVehicle = j;
                         jcan.BufferSizeDistribution = BufferSizeDistribution(j.PacketQueue.Count, PublicParamerters.BufferSize);
-                        jcan.SignalFadingDistribution = SignalFadingDistribution(Computations.Distance(i.InstanceLocation, j.InstanceLocation), PublicParamerters.CommunicationRaduis);
+                        jcan.SignalFadingDistribution = SignalFadingDistribution(Computations.Distance(i.InstanceLocation, j.InstanceLocation), Settings.Default.CommunicationRange);
                         jcan.SpeedDifferenceDistribution = SpeedDifferenceDistribution(i.GetSpeedInKMH, j.GetSpeedInKMH, roadSegment.MaxAllowedSpeed);
                         jcan.MovingDirection = MovingDirection(i.InstanceLocation, j.InstanceLocation, desVehicle.EndJunction.CenterLocation);
 
                         sum += jcan.HeursticFunction;
                         neighbors.Add(jcan);
+
+                        Console.WriteLine("NeighborsAssortment: " + jcan.NeighborsAssortment.ToString());
                     }
                 }
 
+                /*-
                 int sen = i.VID;
                 int deID = desVehicle.VID;
-                string nei = PrintList(NodesList);
+                string nei = PrintList(NodesList);*/
 
 
                 if (neighbors.Count > 0)
                 {
                     double average = (1 / Convert.ToDouble((neighbors.Count)));
-                    //  double Priority_threshould = (1 - average) / 2;
                     double Priority_threshould = average;
                     foreach (CandidateVehicle jcan in neighbors)
                     {
@@ -180,7 +188,7 @@ namespace VANET_SIM.Routing
         /// <returns></returns>
         private double SpeedDifferenceDistribution(double si, double sj, double maxS)
         {
-            if (sj > PublicParamerters.MinSpeed)
+            if (sj > Settings.Default.MinSpeed)
             {
                 double re = 0;
                 double difs = Math.Abs(si - sj);
@@ -224,13 +232,13 @@ namespace VANET_SIM.Routing
                 double bast = norAngle * Math.Exp(norAngle);
                 double mak = 1 + (norAngle * Math.Exp(norAngle));
                 double mikdar = bast / mak;
-                double re = Math.Pow(1 - mikdar, 1 - norAngle);
+                double re = Math.Pow(1 - mikdar, Settings.Default.IntraVehiForwardDirectionPar); // smaller IntraVehiForwardDirectionPar value means heigher pri for the forward dir
 
                 return re;
             }
             else
             {
-                return 0; // (Math.Pow(((1 - (norAngle * Math.Exp(norAngle))) / (1 + (norAngle * Math.Exp(norAngle)))), x2)); // heigher x2 smaller prioiry for the node which not in the direction.
+                return (Math.Pow(((1 - (norAngle * Math.Exp(norAngle))) / (1 + (norAngle * Math.Exp(norAngle)))), Settings.Default.IntraVehiBackwardDirectionPar));  // heigher IntraVehiBackwardDirectionPar smaller prioiry for the node which not in the direction.
             }
         }
 

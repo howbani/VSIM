@@ -1,5 +1,5 @@
 ﻿using System;
-namespace VANET_SIM.Operations
+namespace VSIM.Operations
 { 
     /// <summary>
     /// SimpleRNG is a simple random number generator based on 
@@ -38,8 +38,6 @@ namespace VANET_SIM.Operations
             {
                 randomSpeed = min + GetUniform(max - min - 1);
             }
-
-           // Console.WriteLine("randomSpeed:" + randomSpeed);
             return randomSpeed;
         }
 

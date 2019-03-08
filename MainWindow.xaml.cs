@@ -1,39 +1,32 @@
-﻿using Accord.Statistics.Distributions.Univariate;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using VANET_SIM.db;
-using VANET_SIM.Operations;
-using VANET_SIM.Properties;
-using VANET_SIM.RoadNet.Components;
-using VANET_SIM.Routing;
-using VANET_SIM.UI;
+using VSIM.db;
+using VSIM.experments;
+using VSIM.Operations;
+using VSIM.Properties;
+using VSIM.RoadNet.Components;
+using VSIM.UI;
 
-namespace VANET_SIM
+namespace VSIM
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-       
+        UiNetGen uiNetGen;
+        UIsetExperment uIsetExperment;
         public DispatcherTimer RandomSelectSourceNodeTimer = new DispatcherTimer();
         public List<Junction> MyJunctions = new List<Junction>();
         public List<RoadSegment> MyRoadSegments = new List<RoadSegment>();
         public List<VehicleUi> MyVehicles = new List<VehicleUi>();
-        public double StreenTimes = 2.01;
+        public double StreenTimes = 1;
         public MainWindow()
         {
             InitializeComponent();
@@ -51,75 +44,25 @@ namespace VANET_SIM
            
 
             PublicStatistics.LiveStatstics.Topmost = true;
-            PublicStatistics.LiveStatstics.Show();
             Settings.Default.IsIntialized = false;
-
+            uIsetExperment = new UIsetExperment(this);
+            uiNetGen = new UiNetGen(this);
             
-            // re-intialize
-            /*
-          // double tr= MyMath.Combination(10, 2);
-
-            SegmentConnectivitySelector reouter = new SegmentConnectivitySelector();
-            double myVechilesCountInTheSegment = 5;
-            double myRoadSegmentLength = 1000;
-            double myVehicleInterArrivalMean = 5;
-            double myComunicationRange = 100;
-            double numberoflanes = 3;
-
-
-            for (int x=1;x<=20;x++)
-            {
-                // myRoadSegmentLength =(x * 300);
-                //Console.WriteLine(myRoadSegmentLength);
-                // myComunicationRange = (x * 50);
-                // Console.WriteLine(myComunicationRange);
-                myVechilesCountInTheSegment=x;
-                //Console.WriteLine(myVechilesCountInTheSegment);
-                double pro = reouter.SegmentConnectivity1(myRoadSegmentLength, myVechilesCountInTheSegment, myVehicleInterArrivalMean, myComunicationRange, numberoflanes);
-                Console.WriteLine(pro);
-            }*/
-
-            /*
-            double transDis = 10;
-            double myComunicationRange = 1000;
-            for (int x = 1; x <= 10; x++)
-            {
-                transDis = (x * 50);
-                double pr = Nakagami.GetNakagami(transDis, myComunicationRange);
-                Console.WriteLine(pr);
-            }*/
-
-            /*
-            double si = 100;
-            double sj = 0;
-            for (int x = 1; x <= 10; x++)
-            {
-          
-                sj = (x * 10);
-
-                double pr = IntraRouting.SpeedDiffrenceDist(si, sj, 120);
-                Console.WriteLine(pr);
-            }*/
-
-            /*
-            double NumberofPacketsInTheBuffer = 1;
-            double BufferSize = 50;
-            for (int x = 0; x <= 5; x++)
-            {
-
-                NumberofPacketsInTheBuffer = (x * 10);
-                double pr = IntraRouting.BufferSizeDistribution(NumberofPacketsInTheBuffer, BufferSize);
-                Console.WriteLine(pr);
-            }
-            */
-
-
-
-
-
 
         }
 
+        public void OpenTopGen()
+        {
+            try
+            {
+                uiNetGen.Show();
+            }
+            catch
+            {
+                uiNetGen = new UiNetGen(this);
+                uiNetGen.Show();
+            }
+        }
 
 
         private void ComponentMenuItem_Click(object sender, RoutedEventArgs e)
@@ -130,10 +73,35 @@ namespace VANET_SIM
             string itemString = item.Header.ToString();
             switch (itemString)
             {
-                case "_Add Road Segment":
-                    RoadSegment rs = new RoadSegment(this, RoadOrientation.Horizontal);
-                    rs.Margin = new Thickness(po.X + 50, po.Y + 50, 0, 0);
-                    canvas_vanet.Children.Add(rs);
+
+                case "_Network Generator":
+                    {
+                        OpenTopGen();
+                    }
+                    break;
+                case "_Two Lanes":
+                    {
+                        RoadSegment rs = new RoadSegment(this, 2, RoadOrientation.Horizontal);
+                        rs.Height = rs.LanesCount * PublicParamerters.LaneWidth + 1.5;
+                        rs.Margin = new Thickness(po.X + 50, po.Y + 50, 0, 0);
+                        canvas_vanet.Children.Add(rs);
+                    }
+                    break;
+                case "_Four Lanes":
+                    {
+                        RoadSegment rs = new RoadSegment(this, 4, RoadOrientation.Horizontal);
+                        rs.Height = rs.LanesCount * PublicParamerters.LaneWidth + 1.5;
+                        rs.Margin = new Thickness(po.X + 50, po.Y + 50, 0, 0);
+                        canvas_vanet.Children.Add(rs);
+                    }
+                    break;
+                case "_Six Lanes":
+                    {
+                        RoadSegment rs = new RoadSegment(this, 6, RoadOrientation.Horizontal);
+                        rs.Height = rs.LanesCount * PublicParamerters.LaneWidth + 1.5;
+                        rs.Margin = new Thickness(po.X + 50, po.Y + 50, 0, 0);
+                        canvas_vanet.Children.Add(rs);
+                    }
                     break;
                 case "_Add Junction":
                     Junction jun = new Junction(this);
@@ -150,16 +118,7 @@ namespace VANET_SIM
                     break;
                 case "_Clear":
                     {
-                        foreach (RoadSegment s in MyRoadSegments)
-                        {
-                            s.stopGeneratingVehicles();
-                        }
-                        Settings.Default.IsIntialized = false; // re-intialize
-                        canvas_vanet.Children.Clear();
-                        MyJunctions.Clear();
-                        MyRoadSegments.Clear();
-                        MyVehicles.Clear();
-                        PublicStatistics.Clear();
+                        Clear();
                     }
                     break;
                 
@@ -168,21 +127,48 @@ namespace VANET_SIM
 
 
 
+        public void Clear()
+        {
+            Dispatcher.Invoke((Action)delegate
+               {
+                   foreach (RoadSegment s in MyRoadSegments)
+                   {
+                       s.stopGeneratingVehicles();
+                   }
+                   Settings.Default.IsIntialized = false; // re-intialize
+                   canvas_vanet.Children.Clear();
+                   MyJunctions.Clear();
+                   MyRoadSegments.Clear();
+                   MyVehicles.Clear();
+                   PublicStatistics.Clear();
+               });
+        }
+
+
         private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             double sctim = StreenTimes / 10;
             double x = _slider.Value;
-            if (x <= sctim) { x = sctim; }
+            if (x <= sctim)
+            {
+                x = sctim;
+                Settings.Default.SliderValue = x;
+                Settings.Default.Save();
+            }
             var scaler = canvas_vanet.LayoutTransform as ScaleTransform;
             canvas_vanet.LayoutTransform = new ScaleTransform(x, x, SystemParameters.FullPrimaryScreenWidth / 2, SystemParameters.FullPrimaryScreenHeight / 2);
             lbl_zome_percentage.Text = (x * 100).ToString() + "%";
+
+
+            Settings.Default.SliderValue = x;
+            Settings.Default.Save();
 
 
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _slider.Value = 4;
+            _slider.Value = Settings.Default.SliderValue;
         }
 
        
@@ -220,13 +206,13 @@ namespace VANET_SIM
         /// <param name="e"></param>
         private void GeneratePacket_to_rate(object sender, EventArgs e)
         {
-            RunPacketGenerator();
+            RandomlySourceVechicle(Settings.Default.DistanceImportance, Settings.Default.DistanceBetweenSourceAndDestination);
         }
 
         /// <summary>
-        /// packet generator
+        /// select the source vehicle randomly.
         /// </summary>
-        public void RunPacketGenerator()
+        public void RandomlySourceVechicle(bool isDistance,double distance)
         {
             // select random vehicle:
             if (Settings.Default.IsIntialized)
@@ -238,28 +224,59 @@ namespace VANET_SIM
                     int max = MyVehicles.Count;
                     if (max >= 2)
                     {
-                        int rand = Convert.ToInt16(RandomeNumberGenerator.GetUniform(max - 1));
-                        MyVehicles[rand].RandomDestinationVehicle();
+                        // consider the distance
+                        if (isDistance)
+                        {
+                            int rand = Convert.ToInt16(RandomeNumberGenerator.GetUniform(max - 1));
+                            VehicleUi src = MyVehicles[rand];
+                            VehicleUi des = GetDestinationWithinAdistance(src, distance);
+                            if(des!=null)
+                            {
+                                src.GeneratePacket(des);
+                            }
+                        }
+                        else
+                        {
+                            int rand = Convert.ToInt16(RandomeNumberGenerator.GetUniform(max - 1));
+                            MyVehicles[rand].RandomDestinationVehicle();
+                        }
                     }
                 }
             }
         }
 
+        public VehicleUi GetDestinationWithinAdistance(VehicleUi src, double dis)
+        {
+            foreach(VehicleUi des in MyVehicles)
+            {
+                double accualdistance = Computations.Distance(src.InstanceLocation, des.InstanceLocation);
+                double thesould = 2 * Math.Sqrt(dis);
+                double uper_tollerance = dis + thesould;
+                double lower_tollerance = dis - thesould;
+                if (accualdistance >= lower_tollerance && accualdistance <= uper_tollerance)
+                {
+                    return des;
+                }
+            }
 
-        private int XCounter = 0;
-        private int spesifiedXofpackets = 0;
+            return null;
+        }
+
+
+
         /// <summary>
         /// set the timer to generate x of packets
         /// </summary>
         /// <param name="xofpackets"></param>
         public void GenerateXofPackets(int xofpackets)
         {
-            XCounter = 0;
-            spesifiedXofpackets = xofpackets;
+            Settings.Default.NumberofPackets = xofpackets;
             RandomSelectSourceNodeTimer.Tick += GenerateXofPacketTrick;
-            RandomSelectSourceNodeTimer.Interval = TimeSpan.FromSeconds(0.1);
+            RandomSelectSourceNodeTimer.Interval = TimeSpan.FromSeconds(0.001);
             RandomSelectSourceNodeTimer.Start();
         }
+
+        
 
         /// <summary>
         /// generate x of packets.
@@ -268,40 +285,56 @@ namespace VANET_SIM
         /// <param name="e"></param>
         public void GenerateXofPacketTrick(object sender, EventArgs e)
         {
-            XCounter += 1;
-            if (spesifiedXofpackets < XCounter)
+            if(PublicStatistics.GeneratedPacketsCount>= Settings.Default.NumberofPackets)
             {
+                // stop:
                 RandomSelectSourceNodeTimer.Stop();
                 RandomSelectSourceNodeTimer.Interval = TimeSpan.FromSeconds(0);
-                spesifiedXofpackets = 0;
-                XCounter = 0;
+                Settings.Default.NumberofPackets = 0;
             }
             else
             {
-                RunPacketGenerator();
+                // generate more:
+                RandomlySourceVechicle(Settings.Default.DistanceImportance, Settings.Default.DistanceBetweenSourceAndDestination);
             }
         }
 
+
+        public void DisplayInfo()
+        {
+            try
+            {
+                PublicStatistics.LiveStatstics.lbl_number_of_junctions.Content = MyJunctions.Count;
+                PublicStatistics.LiveStatstics.lbl_number_of_road_segments.Content = MyRoadSegments.Count;
+                PublicStatistics.LiveStatstics.lbl_max_speed.Content = Settings.Default.MaxSpeed + "Kmh";
+                PublicStatistics.LiveStatstics.lbl_min_speed.Content = Settings.Default.MinSpeed + "Kmh";
+                PublicStatistics.LiveStatstics.lbl_average_speed.Content = PublicParamerters.MeanSpeed + "Kmh";
+                PublicStatistics.LiveStatstics.lbl_com_range.Content = Settings.Default.CommunicationRange + "m";
+                PublicStatistics.LiveStatstics.lbl_data_packet_size.Content = PublicParamerters.DataPacketLength + "bit";
+                PublicStatistics.LiveStatstics.lbl_lanes_count.Content = MyRoadSegments[0].LanesCount +"/Way";
+                PublicStatistics.LiveStatstics.lbl_max_retransmit_times.Content = Settings.Default.MaximumAttemps.ToString();
+                PublicStatistics.LiveStatstics.lbl_max_store_times.Content = Settings.Default.MaxStoreTime.ToString();
+
+            }
+            catch
+            {
+
+            }
+        }
 
         public void DeplayVechiles() 
         {
             if (MyRoadSegments.Count > 0 && MyJunctions.Count > 0)
             {
                 
-                foreach (RoadSegment s in MyRoadSegments)
+                foreach (RoadSegment rs in MyRoadSegments)
                 {
-                    s.VehicleInterArrivalMean = Computations.VehicleInterArrivalMean;
+                    rs.VehicleInterArrivalMean = Computations.VehicleInterArrivalMean;
 
-                    s.SetAsEntry();
+                    rs.SetAsEntry();
                 }
 
-                PublicStatistics.LiveStatstics.lbl_number_of_junctions.Content = MyJunctions.Count;
-                PublicStatistics.LiveStatstics.lbl_number_of_road_segments.Content = MyRoadSegments.Count;
-                PublicStatistics.LiveStatstics.lbl_max_speed.Content = PublicParamerters.MaxSpeed + "Kmh";
-                PublicStatistics.LiveStatstics.lbl_min_speed.Content = PublicParamerters.MinSpeed + "Kmh";
-                PublicStatistics.LiveStatstics.lbl_average_speed.Content = PublicParamerters.MeanSpeed + "Kmh";
-                PublicStatistics.LiveStatstics.lbl_com_range.Content = PublicParamerters.CommunicationRaduis + "m";
-                PublicStatistics.LiveStatstics.lbl_data_packet_size.Content= PublicParamerters.DataPacketLength + "bit";
+                DisplayInfo();
 
                 Settings.Default.IsIntialized = true;
             }
@@ -495,10 +528,14 @@ namespace VANET_SIM
         {
             try
             {
-                MessageBoxResult ms = MessageBoxResult.Yes; // MessageBox.Show("Sure?", "Vanet", MessageBoxButton.YesNo);
+                MessageBoxResult ms =  MessageBox.Show("Sure?", "Vanet", MessageBoxButton.YesNo);
                 if (ms == MessageBoxResult.Yes)
                 {
+                    PublicStatistics.LiveStatstics.IsCloseUable = true;
+                    uIsetExperment.isCloseUpbale = true;
                     PublicStatistics.LiveStatstics.Close();
+                    uIsetExperment.Close();
+                    uiNetGen.Close();
                     e.Cancel = false;
                 }
                 else
@@ -523,22 +560,52 @@ namespace VANET_SIM
                 {
                     switch (Header)
                     {
-                        case "_Show Packets": // stop.
-                            List<object> List = new List<object>();
-                            List.AddRange(PublicStatistics.DeleiverdPacketsList);
-                            List.AddRange(PublicStatistics.DropedPacketsList);
-                            if (List.Count > 0)
+                        case "_Show Results Details": // stop.
                             {
-                                UiShowResults sh = new UiShowResults(List);
-                                // sh.dg_results.ItemsSource = PublicParamerters.DeleiverdPacketsList;
-                                sh.Show();
+                                List<object> List = new List<object>();
+                                List.AddRange(PublicStatistics.DeleiverdPacketsList);
+                                List.AddRange(PublicStatistics.DropedPacketsList);
+                                if (List.Count > 0)
+                                {
+                                    UiShowResults sh = new UiShowResults(List);
+                                    sh.Title = "Details Results";
+                                    sh.Show();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("No Results Found!");
+                                }
+                                break;
                             }
-                            else
+                        case "_Print Results": // stop.
                             {
-                                MessageBox.Show("No Results Found!");
+                                List<object> List = new List<object>();
+                                List.AddRange(PublicStatistics.PrintResults(this));
+                                if (List.Count > 0)
+                                {
+                                    UiShowResults sh = new UiShowResults(List);
+                                    sh.Title = "Final Results";
+                                    sh.Show();
+                                }
+                                else
+                                {
+                                    MessageBox.Show("No Results Found!");
+                                }
+                                break;
                             }
-                        
-                            break;
+                        case "_Show Live Results":
+                            {
+                                try
+                                {
+                                    PublicStatistics.LiveStatstics.Show();
+                                }
+                                catch
+                                {
+                                    PublicStatistics.LiveStatstics = new UiLiveStatstics();
+                                    PublicStatistics.LiveStatstics.Show();
+                                }
+                                break;
+                            }
                     }
                 }
             }
@@ -614,7 +681,19 @@ namespace VANET_SIM
             }
         }
 
-       
-        
+        private void Btn_experment_Click(object sender, RoutedEventArgs e)
+        {
+            if (!Settings.Default.IsIntialized)
+            {
+                
+                uIsetExperment.WindowState = WindowState.Normal;
+                uIsetExperment.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                uIsetExperment.Show();
+            }
+            else
+            {
+                MessageBox.Show("Exp is running.");
+            }
+        }
     }
 }

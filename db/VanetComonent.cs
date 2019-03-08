@@ -1,6 +1,6 @@
-﻿using VANET_SIM.RoadNet.Components;
+﻿using VSIM.RoadNet.Components;
 
-namespace VANET_SIM.db 
+namespace VSIM.db 
 {
     public class VanetComonent
     {
@@ -11,5 +11,6 @@ namespace VANET_SIM.db
         public double Height { get; set; }
         public ComponentType ComponentType { get; set; }
         public RoadOrientation RoadOrientation { get; set; }
+        public int LanesCount { get; set; }
     }
 }
