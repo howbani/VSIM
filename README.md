@@ -5,7 +5,7 @@ The version which support v2v and v2i can be found in [https://github.com/howban
 
 Developed by Ammar Hawbani et al. (anmande@ustc.edu.cn), Copyright © 2019 Ammar Hawbani et al.
 
-# VSIM
+# HERO:
 VANET SIMULATOR: 2D platform with a graphical user interface provides detailed visualization and animation of simulation runs with lots of relevant pieces of information.
 for more info plz contact me via anmande@ustc.edu.cn
 
